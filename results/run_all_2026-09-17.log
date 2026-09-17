@@ -1,0 +1,695 @@
+
+######## 08:02:43 wait for model download
+download done: 62G
+
+######## 08:07:14 A. raw decode, MPS off
+clip=shot_010s_000.mp4 1920x1080 frames=307 fps=29.97 reps=3 mps=off
+backend procs  agg frames/s  per-proc frames/s   cpu-s  cpu cores  frames/s/core  x realtime
+cv2         1           694                694     8.5        6.4            109        23.2
+nvdec       1          2188               2188     0.1        0.2          12518        73.0
+cv2         2          1325                666    18.1       13.0            102        44.2
+nvdec       2          2630               1320     1.2        1.7           1519        87.8
+cv2         4          2431                620    38.9       25.7             95        81.1
+nvdec       4          2290                573     6.4        4.0            575        76.4
+cv2         8          4763                609    88.7       57.3             83       158.9
+nvdec       8          2258                283    26.0        8.0            283        75.3
+cv2        16          2802                180   330.6       62.9             45        93.5
+nvdec      16          2227                139   105.6       16.0            140        74.3
+clip=seg6.ts 640x360 frames=182 fps=29.97 reps=5 mps=off
+backend procs  agg frames/s  per-proc frames/s   cpu-s  cpu cores  frames/s/core  x realtime
+cv2         1          1616               1616     1.5        2.7            606        53.9
+nvdec       1          8181               8181     0.1        0.5          16476       273.0
+cv2         4          7731               2094     5.9       12.7            610       258.0
+nvdec       4          2320                581     6.2        4.0            581        77.4
+cv2         8         19690               2557    12.4       33.9            581       657.0
+nvdec       8          2318                290    24.8        8.0            290        77.4
+cv2        16         32033               2064    28.1       62.5            513      1068.8
+nvdec      16          2317                145    99.5       16.0            145        77.3
+
+######## 08:09:58 A'. raw decode NVDEC, MPS on
+Warning: Failed writing log files to directory [/var/log/nvidia-mps]. No logs will be available.
+clip=shot_010s_000.mp4 1920x1080 frames=307 fps=29.97 reps=3 mps=on
+backend procs  agg frames/s  per-proc frames/s   cpu-s  cpu cores  frames/s/core  x realtime
+nvdec       1          2189               2189     0.1        0.2          13496        73.0
+nvdec       2          4274               2140     0.1        0.3          12535       142.6
+nvdec       4          8242               2065     0.3        0.8          10881       275.0
+nvdec       8         11823               1486     0.8        1.3           8915       394.5
+nvdec      16         12178                774     2.4        2.0           6086       406.3
+clip=seg6.ts 640x360 frames=182 fps=29.97 reps=5 mps=on
+backend procs  agg frames/s  per-proc frames/s   cpu-s  cpu cores  frames/s/core  x realtime
+nvdec       1          8681               8681     0.1        0.6          14129       289.6
+nvdec       4         25772               6886     0.3        2.2          11766       859.9
+nvdec       8         35628               5841     0.7        3.5          10063      1188.8
+nvdec      16         51202               3549     1.8        6.3           8082      1708.4
+
+######## 08:11:50 B. vLLM loader decode stage (sampled frames), 3 reps
+--- rep 1
+clips=32 from $VOD_DIR/enc_10s avg=6.2 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(10, 1080, 1920, 3)  sequential median=  132.7 ms/clip  | 8 threads:   10.1 clips/s (99 ms/clip)  errors=0+0
+  opencv                   frames=(10, 1080, 1920, 3)  sequential median=  271.5 ms/clip  | 8 threads:   18.8 clips/s (53 ms/clip)  errors=0+0
+clips=16 from $VOD_DIR/enc_30s avg=17.1 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(31, 1080, 1920, 3)  sequential median=  348.5 ms/clip  | 8 threads:    3.7 clips/s (268 ms/clip)  errors=0+0
+  opencv                   frames=(31, 1080, 1920, 3)  sequential median=  683.0 ms/clip  | 8 threads:    7.0 clips/s (142 ms/clip)  errors=0+0
+clips=8 from $VOD_DIR/enc_120s avg=60.8 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(32, 1080, 1920, 3)  sequential median=  408.7 ms/clip  | 8 threads:    3.2 clips/s (315 ms/clip)  errors=0+0
+  opencv                   frames=(32, 1080, 1920, 3)  sequential median= 2108.9 ms/clip  | 8 threads:    2.2 clips/s (460 ms/clip)  errors=0+0
+clips=32 from /tmp/seg6.ts avg=0.4 MB fps=2.0 threads=8
+  pynvvideocodec[slots=2]  frames=(12, 360, 640, 3)  sequential median=   26.1 ms/clip  | 8 threads:   51.8 clips/s (19 ms/clip)  errors=0+0
+WARNING 09-17 08:17:01 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:01 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:01 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:17:02 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:17:02 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+  opencv                   frames=(11, 360, 640, 3)  sequential median=   33.9 ms/clip  | 8 threads:  113.9 clips/s (9 ms/clip)  errors=0+0
+--- rep 2
+clips=32 from $VOD_DIR/enc_10s avg=6.2 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(10, 1080, 1920, 3)  sequential median=  131.9 ms/clip  | 8 threads:    9.8 clips/s (102 ms/clip)  errors=0+0
+  opencv                   frames=(10, 1080, 1920, 3)  sequential median=  255.7 ms/clip  | 8 threads:   18.9 clips/s (53 ms/clip)  errors=0+0
+clips=16 from $VOD_DIR/enc_30s avg=17.1 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(31, 1080, 1920, 3)  sequential median=  347.8 ms/clip  | 8 threads:    3.7 clips/s (273 ms/clip)  errors=0+0
+  opencv                   frames=(31, 1080, 1920, 3)  sequential median=  701.9 ms/clip  | 8 threads:    6.8 clips/s (147 ms/clip)  errors=0+0
+clips=8 from $VOD_DIR/enc_120s avg=60.8 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(32, 1080, 1920, 3)  sequential median=  398.2 ms/clip  | 8 threads:    3.2 clips/s (317 ms/clip)  errors=0+0
+  opencv                   frames=(32, 1080, 1920, 3)  sequential median= 2220.6 ms/clip  | 8 threads:    2.2 clips/s (459 ms/clip)  errors=0+0
+clips=32 from /tmp/seg6.ts avg=0.4 MB fps=2.0 threads=8
+  pynvvideocodec[slots=2]  frames=(12, 360, 640, 3)  sequential median=   30.9 ms/clip  | 8 threads:   46.1 clips/s (22 ms/clip)  errors=0+0
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:32 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:32 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:33 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:33 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:33 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:33 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:20:33 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:20:33 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+  opencv                   frames=(11, 360, 640, 3)  sequential median=   31.8 ms/clip  | 8 threads:  114.8 clips/s (9 ms/clip)  errors=0+0
+--- rep 3
+clips=32 from $VOD_DIR/enc_10s avg=6.2 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(10, 1080, 1920, 3)  sequential median=  130.4 ms/clip  | 8 threads:    9.7 clips/s (103 ms/clip)  errors=0+0
+  opencv                   frames=(10, 1080, 1920, 3)  sequential median=  248.1 ms/clip  | 8 threads:   18.6 clips/s (54 ms/clip)  errors=0+0
+clips=16 from $VOD_DIR/enc_30s avg=17.1 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(31, 1080, 1920, 3)  sequential median=  352.2 ms/clip  | 8 threads:    3.7 clips/s (268 ms/clip)  errors=0+0
+  opencv                   frames=(31, 1080, 1920, 3)  sequential median=  680.1 ms/clip  | 8 threads:    7.0 clips/s (142 ms/clip)  errors=0+0
+clips=8 from $VOD_DIR/enc_120s avg=60.8 MB fps=1.0 threads=8
+  pynvvideocodec[slots=2]  frames=(32, 1080, 1920, 3)  sequential median=  406.4 ms/clip  | 8 threads:    3.1 clips/s (327 ms/clip)  errors=0+0
+  opencv                   frames=(32, 1080, 1920, 3)  sequential median= 2067.8 ms/clip  | 8 threads:    2.2 clips/s (462 ms/clip)  errors=0+0
+clips=32 from /tmp/seg6.ts avg=0.4 MB fps=2.0 threads=8
+  pynvvideocodec[slots=2]  frames=(12, 360, 640, 3)  sequential median=   27.9 ms/clip  | 8 threads:   51.7 clips/s (19 ms/clip)  errors=0+0
+WARNING 09-17 08:22:56 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:56 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:56 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:56 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:56 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:56 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+WARNING 09-17 08:22:57 [video.py:491] Video loading completed with 1 broken/unreadable frames. Expected 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:529] Video loading completed with 1 broken/unreadable frames. Expected to sample 12 frames but only loaded 11 frames.
+WARNING 09-17 08:22:57 [video.py:1258] opencv video loading: expected 12 frames but got 11.
+  opencv                   frames=(11, 360, 640, 3)  sequential median=   29.3 ms/clip  | 8 threads:  117.6 clips/s (9 ms/clip)  errors=0+0
+
+######## 08:22:58 C. E2E Nemotron 3 Nano Omni, NVDEC + MPS
+Warning: Failed writing log files to directory [/var/log/nvidia-mps]. No logs will be available.
+mps: 1 procs
+server starting (asc=12, media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":1,"num_frames":128}}, cpuset=all, extra: ) -> /tmp/vllm_nvdec-mps.log
+ready after ~1000s
+## warmup
+  ok=2 err=0 wall=11.7s throughput=0.2 req/s
+  ok=2 err=0 wall=1.5s throughput=1.3 req/s
+## rep 1
+=== nvdec-mps/live-ts-6s-360p-audio clips=1 (0.4 MB avg) N=64 fps=2.0 audio=True ===
+  ok=64 err=0 wall=8.2s throughput=7.8 req/s
+  latency p50=5.2s p90=7.6s p95=8.0s max=8.1s min=1.9s
+  prompt_tokens avg=1783
+  server cpu: 18.3 cpu-s total, 0.29 cpu-s/req
+  gpu samples (sm%/dec%): 34/0 17/19 22/0 31/0 29/0 26/0 31/0 29/0 31/0 
+=== nvdec-mps/live-ts-6s-360p-video clips=1 (0.4 MB avg) N=64 fps=2.0 audio=False ===
+  ok=64 err=0 wall=2.2s throughput=28.9 req/s
+  latency p50=2.1s p90=2.2s p95=2.2s max=2.2s min=1.8s
+  prompt_tokens avg=1705
+  server cpu: 4.5 cpu-s total, 0.07 cpu-s/req
+  gpu samples (sm%/dec%): 50/21 53/0 
+=== nvdec-mps/vod-10s-1080p clips=64 (5.9 MB avg) N=64 fps=1.0 audio=False ===
+  ok=64 err=0 wall=26.4s throughput=2.4 req/s
+  latency p50=13.2s p90=22.6s p95=23.9s max=25.0s min=1.8s
+  prompt_tokens avg=1622
+  server cpu: 56.4 cpu-s total, 0.88 cpu-s/req
+  gpu samples (sm%/dec%): 5/11 1/2 21/14 33/16 30/21 27/9 14/13 32/0 22/0 23/0 12/0 13/0 25/0 25/0 25/0 16/0 34/0 32/0 34/0 33/0 25/0 14/0 24/0 
+=== nvdec-mps/vod-30s-1080p clips=32 (15.8 MB avg) N=32 fps=1.0 audio=False ===
+  ok=32 err=0 wall=37.2s throughput=0.9 req/s
+  latency p50=20.6s p90=32.2s p95=35.2s max=35.4s min=4.0s
+  prompt_tokens avg=4533
+  server cpu: 61.3 cpu-s total, 1.91 cpu-s/req
+  gpu samples (sm%/dec%): 6/22 8/27 6/20 39/23 3/10 6/23 35/0 4/16 7/27 28/0 33/0 34/0 49/0 31/0 37/0 12/0 
+=== nvdec-mps/vod-120s-1080p clips=8 (60.8 MB avg) N=8 fps=1.0 audio=False ===
+  ok=8 err=0 wall=37.8s throughput=0.2 req/s
+  latency p50=25.9s p90=37.0s p95=37.0s max=37.0s min=9.9s
+  prompt_tokens avg=17363
+  server cpu: 52.5 cpu-s total, 6.57 cpu-s/req
+  gpu samples (sm%/dec%): 4/16 19/3 5/19 8/28 8/28 4/14 75/0 34/0 35/0 45/0 35/0 26/0 
+=== nvdec-mps/vod-10s-1080p-audio clips=64 (5.9 MB avg) N=64 fps=1.0 audio=True ===
+  ok=64 err=0 wall=25.7s throughput=2.5 req/s
+  latency p50=14.3s p90=23.3s p95=23.7s max=24.8s min=2.7s
+  prompt_tokens avg=1769
+  server cpu: 59.8 cpu-s total, 0.93 cpu-s/req
+  gpu samples (sm%/dec%): 7/18 16/5 31/0 19/12 13/1 41/19 26/0 16/0 17/0 35/0 17/0 7/0 33/0 31/0 30/0 31/0 34/0 36/0 31/0 29/0 34/0 38/0 33/0 13/0 22/0 
+## rep 2
+=== nvdec-mps/live-ts-6s-360p-audio clips=1 (0.4 MB avg) N=64 fps=2.0 audio=True ===
+  ok=64 err=0 wall=8.1s throughput=7.9 req/s
+  latency p50=5.1s p90=7.5s p95=7.8s max=8.0s min=1.8s
+  prompt_tokens avg=1783
+  server cpu: 18.5 cpu-s total, 0.29 cpu-s/req
+  gpu samples (sm%/dec%): 21/24 32/0 32/0 31/0 32/0 32/0 33/0 32/0 
+=== nvdec-mps/live-ts-6s-360p-video clips=1 (0.4 MB avg) N=64 fps=2.0 audio=False ===
+  ok=64 err=0 wall=2.2s throughput=29.2 req/s
+  latency p50=2.1s p90=2.1s p95=2.1s max=2.1s min=1.8s
+  prompt_tokens avg=1705
+  server cpu: 4.7 cpu-s total, 0.07 cpu-s/req
+  gpu samples (sm%/dec%): 48/19 52/0 
+=== nvdec-mps/vod-10s-1080p clips=64 (5.9 MB avg) N=64 fps=1.0 audio=False ===
+  ok=64 err=0 wall=6.1s throughput=10.5 req/s
+  latency p50=5.1s p90=5.7s p95=5.7s max=5.9s min=1.1s
+  prompt_tokens avg=1622
+  server cpu: 13.0 cpu-s total, 0.20 cpu-s/req
+  gpu samples (sm%/dec%): 35/20 35/22 45/22 39/21 39/19 
+=== nvdec-mps/vod-30s-1080p clips=32 (15.8 MB avg) N=32 fps=1.0 audio=False ===
+  ok=32 err=0 wall=7.9s throughput=4.0 req/s
+  latency p50=4.6s p90=7.0s p95=7.6s max=7.6s min=1.7s
+  prompt_tokens avg=4533
+  server cpu: 15.4 cpu-s total, 0.48 cpu-s/req
+  gpu samples (sm%/dec%): 8/28 20/20 48/25 44/28 42/23 28/22 
+=== nvdec-mps/vod-120s-1080p clips=8 (60.8 MB avg) N=8 fps=1.0 audio=False ===
+  ok=8 err=0 wall=9.4s throughput=0.8 req/s
+  latency p50=6.6s p90=8.9s p95=8.9s max=8.9s min=4.2s
+  prompt_tokens avg=17363
+  server cpu: 14.4 cpu-s total, 1.80 cpu-s/req
+  gpu samples (sm%/dec%): 7/27 5/16 30/27 43/28 56/25 65/13 
+=== nvdec-mps/vod-10s-1080p-audio clips=64 (5.9 MB avg) N=64 fps=1.0 audio=True ===
+  ok=64 err=0 wall=25.3s throughput=2.5 req/s
+  latency p50=13.2s p90=21.7s p95=22.9s max=23.8s min=2.5s
+  prompt_tokens avg=1769
+  server cpu: 59.4 cpu-s total, 0.93 cpu-s/req
+  gpu samples (sm%/dec%): 7/21 3/7 8/18 35/20 6/15 23/9 13/0 35/0 24/0 15/0 18/0 35/0 36/0 16/0 27/0 33/0 14/0 39/0 23/0 17/0 28/0 21/0 17/0 19/0 
+## rep 3
+=== nvdec-mps/live-ts-6s-360p-audio clips=1 (0.4 MB avg) N=64 fps=2.0 audio=True ===
+  ok=64 err=0 wall=7.9s throughput=8.1 req/s
+  latency p50=4.9s p90=7.3s p95=7.6s max=7.8s min=1.6s
+  prompt_tokens avg=1783
+  server cpu: 18.3 cpu-s total, 0.29 cpu-s/req
+  gpu samples (sm%/dec%): 20/23 33/0 29/0 33/0 33/0 35/0 32/0 32/0 
+=== nvdec-mps/live-ts-6s-360p-video clips=1 (0.4 MB avg) N=64 fps=2.0 audio=False ===
+  ok=64 err=0 wall=2.3s throughput=28.2 req/s
+  latency p50=2.1s p90=2.2s p95=2.2s max=2.2s min=1.8s
+  prompt_tokens avg=1705
+  server cpu: 4.8 cpu-s total, 0.08 cpu-s/req
+  gpu samples (sm%/dec%): 43/21 42/0 
+=== nvdec-mps/vod-10s-1080p clips=64 (5.9 MB avg) N=64 fps=1.0 audio=False ===
+  ok=64 err=0 wall=5.9s throughput=10.9 req/s
+  latency p50=4.8s p90=5.5s p95=5.5s max=5.6s min=1.1s
+  prompt_tokens avg=1622
+  server cpu: 13.0 cpu-s total, 0.20 cpu-s/req
+  gpu samples (sm%/dec%): 34/21 36/16 41/21 40/13 46/0 
+=== nvdec-mps/vod-30s-1080p clips=32 (15.8 MB avg) N=32 fps=1.0 audio=False ===
+  ok=32 err=0 wall=7.8s throughput=4.1 req/s
+  latency p50=4.3s p90=5.9s p95=6.0s max=6.9s min=1.8s
+  prompt_tokens avg=4533
+  server cpu: 16.6 cpu-s total, 0.52 cpu-s/req
+  gpu samples (sm%/dec%): 2/9 46/26 31/28 41/26 40/20 50/17 35/13 
+=== nvdec-mps/vod-120s-1080p clips=8 (60.8 MB avg) N=8 fps=1.0 audio=False ===
+  ok=8 err=0 wall=9.6s throughput=0.8 req/s
+  latency p50=6.3s p90=9.1s p95=9.1s max=9.1s min=4.0s
+  prompt_tokens avg=17363
+  server cpu: 15.2 cpu-s total, 1.90 cpu-s/req
+  gpu samples (sm%/dec%): 3/10 7/14 43/27 12/23 77/24 38/27 34/0 
+=== nvdec-mps/vod-10s-1080p-audio clips=64 (5.9 MB avg) N=64 fps=1.0 audio=True ===
+  ok=64 err=0 wall=25.6s throughput=2.5 req/s
+  latency p50=15.0s p90=23.0s p95=23.5s max=24.4s min=2.1s
+  prompt_tokens avg=1769
+  server cpu: 59.1 cpu-s total, 0.92 cpu-s/req
+  gpu samples (sm%/dec%): 7/20 31/9 6/19 38/19 6/14 20/17 21/0 15/0 26/0 27/0 23/0 16/0 29/0 22/0 17/0 13/0 28/0 31/0 31/0 29/0 35/0 36/0 18/0 9/0 31/0 
+## done nvdec-mps
+
+######## 08:46:22 C. E2E Nemotron 3 Nano Omni, CPU (OpenCV)
+server starting (asc=12, media-io={"video":{"backend":"opencv","fps":1,"num_frames":128}}, cpuset=all, extra: ) -> /tmp/vllm_cpu-opencv.log
+ready after ~490s
+## warmup
+  ok=2 err=0 wall=2.9s throughput=0.7 req/s
+  ok=2 err=0 wall=1.7s throughput=1.2 req/s
+## rep 1
+=== cpu-opencv/live-ts-6s-360p-audio clips=1 (0.4 MB avg) N=64 fps=2.0 audio=True ===
+  ok=64 err=0 wall=8.7s throughput=7.4 req/s
+  latency p50=5.3s p90=8.0s p95=8.3s max=8.6s min=1.4s
+  prompt_tokens avg=1770
+  server cpu: 32.3 cpu-s total, 0.50 cpu-s/req
+  gpu samples (sm%/dec%): 20/0 31/0 29/0 31/0 31/0 28/0 33/0 29/0 
+=== cpu-opencv/live-ts-6s-360p-video clips=1 (0.4 MB avg) N=64 fps=2.0 audio=False ===
+  ok=64 err=0 wall=2.0s throughput=32.1 req/s
+  latency p50=1.9s p90=2.0s p95=2.0s max=2.0s min=1.7s
+  prompt_tokens avg=1692
+  server cpu: 14.7 cpu-s total, 0.23 cpu-s/req
+  gpu samples (sm%/dec%): 1/0 35/0 
+=== cpu-opencv/vod-10s-1080p clips=64 (5.9 MB avg) N=64 fps=1.0 audio=False ===
+  ok=64 err=0 wall=29.9s throughput=2.1 req/s
+  latency p50=14.8s p90=25.8s p95=26.8s max=28.2s min=2.4s
+  prompt_tokens avg=1627
+  server cpu: 240.3 cpu-s total, 3.75 cpu-s/req
+  gpu samples (sm%/dec%): 23/0 16/0 9/0 27/0 14/0 20/0 3/0 9/0 25/0 8/0 33/0 20/0 1/0 30/0 12/0 28/0 17/0 23/0 36/0 32/0 14/0 31/0 22/0 31/0 21/0 26/0 
+=== cpu-opencv/vod-30s-1080p clips=32 (15.8 MB avg) N=32 fps=1.0 audio=False ===
+  ok=32 err=0 wall=47.2s throughput=0.7 req/s
+  latency p50=27.7s p90=42.9s p95=44.2s max=46.2s min=4.9s
+  prompt_tokens avg=4533
+  server cpu: 325.6 cpu-s total, 10.17 cpu-s/req
+  gpu samples (sm%/dec%): 29/0 1/0 44/0 30/0 27/0 13/0 30/0 29/0 32/0 29/0 gpu/enc Idx/% 13/0 35/0 42/0 
+=== cpu-opencv/vod-120s-1080p clips=8 (60.8 MB avg) N=8 fps=1.0 audio=False ===
+  ok=8 err=0 wall=50.7s throughput=0.2 req/s
+  latency p50=34.5s p90=50.1s p95=50.1s max=50.1s min=13.2s
+  prompt_tokens avg=17363
+  server cpu: 322.1 cpu-s total, 40.27 cpu-s/req
+  gpu samples (sm%/dec%): 33/0 33/0 gpu/enc Idx/% 32/0 66/0 60/0 
+=== cpu-opencv/vod-10s-1080p-audio clips=64 (5.9 MB avg) N=64 fps=1.0 audio=True ===
+  ok=64 err=0 wall=33.4s throughput=1.9 req/s
+  latency p50=18.0s p90=29.7s p95=30.4s max=32.7s min=2.8s
+  prompt_tokens avg=1773
+  server cpu: 254.3 cpu-s total, 3.97 cpu-s/req
+  gpu samples (sm%/dec%): 22/0 28/0 13/0 29/0 14/0 17/0 34/0 17/0 13/0 30/0 25/0 1/0 12/0 31/0 13/0 33/0 14/0 19/0 29/0 25/0 18/0 18/0 20/0 28/0 23/0 
+## rep 2
+=== cpu-opencv/live-ts-6s-360p-audio clips=1 (0.4 MB avg) N=64 fps=2.0 audio=True ===
+  ok=64 err=0 wall=7.9s throughput=8.1 req/s
+  latency p50=4.8s p90=7.3s p95=7.6s max=7.8s min=1.3s
+  prompt_tokens avg=1770
+  server cpu: 30.1 cpu-s total, 0.47 cpu-s/req
+  gpu samples (sm%/dec%): 27/0 30/0 29/0 26/0 28/0 31/0 33/0 
+=== cpu-opencv/live-ts-6s-360p-video clips=1 (0.4 MB avg) N=64 fps=2.0 audio=False ===
+  ok=64 err=0 wall=1.9s throughput=33.4 req/s
+  latency p50=1.8s p90=1.8s p95=1.9s max=1.9s min=1.7s
+  prompt_tokens avg=1692
+  server cpu: 14.7 cpu-s total, 0.23 cpu-s/req
+  gpu samples (sm%/dec%): 37/0 
+=== cpu-opencv/vod-10s-1080p clips=64 (5.9 MB avg) N=64 fps=1.0 audio=False ===
+  ok=64 err=0 wall=6.6s throughput=9.6 req/s
+  latency p50=5.5s p90=6.1s p95=6.2s max=6.3s min=4.7s
+  prompt_tokens avg=1627
+  server cpu: 201.4 cpu-s total, 3.15 cpu-s/req
+  gpu samples (sm%/dec%): 21/0 4/0 19/0 23/0 31/0 39/0 
+=== cpu-opencv/vod-30s-1080p clips=32 (15.8 MB avg) N=32 fps=1.0 audio=False ===
+  ok=32 err=0 wall=9.3s throughput=3.4 req/s
+  latency p50=7.9s p90=8.7s p95=8.8s max=8.8s min=2.8s
+  prompt_tokens avg=4533
+  server cpu: 279.3 cpu-s total, 8.73 cpu-s/req
+  gpu samples (sm%/dec%): 1/0 7/0 25/0 37/0 39/0 36/0 
+=== cpu-opencv/vod-120s-1080p clips=8 (60.8 MB avg) N=8 fps=1.0 audio=False ===
+  ok=8 err=0 wall=11.8s throughput=0.7 req/s
+  latency p50=10.3s p90=11.2s p95=11.2s max=11.2s min=9.4s
+  prompt_tokens avg=17363
+  server cpu: 276.0 cpu-s total, 34.49 cpu-s/req
+  gpu samples (sm%/dec%): 70/0 39/0 36/0 
+=== cpu-opencv/vod-10s-1080p-audio clips=64 (5.9 MB avg) N=64 fps=1.0 audio=True ===
+  ok=64 err=0 wall=34.2s throughput=1.9 req/s
+  latency p50=19.1s p90=30.1s p95=31.6s max=33.4s min=3.0s
+  prompt_tokens avg=1773
+  server cpu: 254.2 cpu-s total, 3.97 cpu-s/req
+  gpu samples (sm%/dec%): 26/0 7/0 28/0 17/0 31/0 22/0 13/0 28/0 14/0 24/0 33/0 25/0 33/0 5/0 23/0 11/0 28/0 31/0 2/0 7/0 29/0 27/0 14/0 15/0 30/0 32/0 31/0 
+## rep 3
+=== cpu-opencv/live-ts-6s-360p-audio clips=1 (0.4 MB avg) N=64 fps=2.0 audio=True ===
+  ok=64 err=0 wall=8.2s throughput=7.8 req/s
+  latency p50=4.9s p90=7.6s p95=7.8s max=8.0s min=1.4s
+  prompt_tokens avg=1770
+  server cpu: 30.8 cpu-s total, 0.48 cpu-s/req
+  gpu samples (sm%/dec%): 31/0 27/0 28/0 29/0 30/0 34/0 29/0 
+=== cpu-opencv/live-ts-6s-360p-video clips=1 (0.4 MB avg) N=64 fps=2.0 audio=False ===
+  ok=64 err=0 wall=2.0s throughput=31.8 req/s
+  latency p50=1.9s p90=2.0s p95=2.0s max=2.0s min=1.8s
+  prompt_tokens avg=1692
+  server cpu: 14.9 cpu-s total, 0.23 cpu-s/req
+  gpu samples (sm%/dec%): 34/0 43/0 
+=== cpu-opencv/vod-10s-1080p clips=64 (5.9 MB avg) N=64 fps=1.0 audio=False ===
+  ok=64 err=0 wall=7.5s throughput=8.5 req/s
+  latency p50=6.3s p90=7.0s p95=7.0s max=7.2s min=2.5s
+  prompt_tokens avg=1627
+  server cpu: 200.1 cpu-s total, 3.13 cpu-s/req
+  gpu samples (sm%/dec%): 10/0 11/0 20/0 23/0 32/0 22/0 
+=== cpu-opencv/vod-30s-1080p clips=32 (15.8 MB avg) N=32 fps=1.0 audio=False ===
+  ok=32 err=0 wall=8.8s throughput=3.6 req/s
+  latency p50=7.2s p90=8.0s p95=8.1s max=8.2s min=2.7s
+  prompt_tokens avg=4533
+  server cpu: 283.6 cpu-s total, 8.86 cpu-s/req
+  gpu samples (sm%/dec%): 33/0 25/0 41/0 24/0 34/0 50/0 
+=== cpu-opencv/vod-120s-1080p clips=8 (60.8 MB avg) N=8 fps=1.0 audio=False ===
+  ok=8 err=0 wall=11.5s throughput=0.7 req/s
+  latency p50=9.9s p90=11.0s p95=11.0s max=11.0s min=8.9s
+  prompt_tokens avg=17363
+  server cpu: 276.6 cpu-s total, 34.58 cpu-s/req
+  gpu samples (sm%/dec%): 20/0 78/0 42/0 
+=== cpu-opencv/vod-10s-1080p-audio clips=64 (5.9 MB avg) N=64 fps=1.0 audio=True ===
+  ok=64 err=0 wall=32.9s throughput=1.9 req/s
+  latency p50=16.8s p90=28.3s p95=29.6s max=31.1s min=3.0s
+  prompt_tokens avg=1773
+  server cpu: 255.0 cpu-s total, 3.98 cpu-s/req
+  gpu samples (sm%/dec%): 28/0 27/0 27/0 9/0 9/0 14/0 23/0 32/0 13/0 31/0 11/0 15/0 14/0 13/0 18/0 32/0 26/0 25/0 30/0 18/0 30/0 32/0 30/0 32/0 6/0 16/0 16/0 15/0 
+## done cpu-opencv
+
+######## 09:02:22 ALL DONE
