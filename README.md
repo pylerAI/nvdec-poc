@@ -16,7 +16,8 @@ on vLLM 0.28.0.
 | End-to-end p50 latency, 1080p 10 s ×64 / 30 s ×32 / 120 s ×8 | 8.9 / 14.3 / 18.2 s | **7.7 / 9.8 / 12.9 s** |
 | 360p 6 s live segment (video only) | 0.23 cpu-s, p50 1.9 s | 0.07 cpu-s, p50 2.1 s (CPU saving only) |
 
-Full write-up: [REPORT.md](REPORT.md). Issues found in PyNvVideoCodec (MPEG-TS indexing, open-GOP cuts,
+Full write-up: [REPORT.md](REPORT.md). The trial-and-error path that led here, on one page:
+[docs/journey.md](docs/journey.md). Issues found in PyNvVideoCodec (MPEG-TS indexing, open-GOP cuts,
 GIL serialization, MPS dependence) with reproductions: [docs/nvidia-issues.md](docs/nvidia-issues.md).
 
 ## Layout
