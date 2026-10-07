@@ -28,7 +28,8 @@ GIL serialization, MPS dependence) with reproductions: [docs/nvidia-issues.md](d
 | `bench/raw_decode_bench.py` | raw decode throughput, 1–16 processes, cv2 vs PyNvVideoCodec, CPU cores used |
 | `bench/vod_loader_bench.py` | decode-stage benchmark through vLLM `VideoMediaIO`: `pynvvideocodec` vs `opencv` |
 | `bench/e2e_matrix.sh` | start vLLM (Nemotron 3 Nano Omni) with a media-io config and run the live/VOD load matrix ×3 |
-| `bench/load_test.py` | concurrent OpenAI-API load generator with data-URL video (file or directory of clips) |
+| `bench/live_paced.sh` | start vLLM with a media-io config and sweep a paced live load: K streams × one segment every 6 s for 5 min, K = 32…192; reports latency, deadline misses, server CPU (cgroup minus client) and GPU utilization. Not part of `run_all.sh` |
+| `bench/load_test.py` | concurrent OpenAI-API load generator with data-URL video (file or directory of clips); `STREAMS=K` switches to the paced, open-loop live mode, with a unique multimodal uuid per request so vLLM's caches miss |
 | `bench/run_all.sh` | the full chain as run for the report; `bench/summarize.py` turns its log into `results/summary.md` |
 | `bench/nvdec_advice_bench.py`, `bench/remux_vllm_pattern.py` | PyNvVideoCodec microbenchmarks: decoder reuse, seek, remux, concurrency |
 | `bench/cut_shots.py` | cut a long MP4 into fixed-length shots by stream copy (re-encode with closed GOPs afterwards) |
@@ -51,4 +52,10 @@ HW_DECODERS=2 python bench/vod_loader_bench.py shots_10s/ 1 32 8
 # end-to-end (NVDEC config; use '{"video":{"backend":"opencv","fps":1,"num_frames":128}}' for the CPU baseline)
 MPS=1 VOD_DIR=/data/vod bash bench/e2e_matrix.sh nvdec-mps \
   '{"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":1,"num_frames":128}}'
+
+# paced live load: K streams each sending one 6 s segment every 6 s for 5 min (STREAMS_LIST, DURATION, INTERVAL,
+# VIDEO = a .ts file or a directory of segments); run once per decode config
+MPS=1 VIDEO=/tmp/seg6.ts bash bench/live_paced.sh nvdec-mps \
+  '{"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":1,"num_frames":128}}'
+VIDEO=/tmp/seg6.ts bash bench/live_paced.sh cpu-opencv '{"video":{"backend":"opencv","fps":1,"num_frames":128}}'
 ```
