@@ -195,6 +195,40 @@ if os.environ.get("STAGE_TIMING_DIR"):
     def _shape(x):
         return list(getattr(x, "shape", []) or [])
 
+    # --- Experiment (BATCH_VIDEO=1): run the ViT once over all videos of an encoder step instead of once per video.
+    # RADIO's video path packs tubelets into one sequence with block-diagonal attention and spatial-only position
+    # encoding, so tubelets never interact: for videos with equal frame counts that are a multiple of T the result
+    # is identical to the per-video loop. BATCH_VIDEO_CHECK=n compares the first n batched calls against that loop.
+    # The runner's per-video split (requires_sequential_video_encoding) is removed from the model class as well.
+    _checks = {"left": int(os.environ.get("BATCH_VIDEO_CHECK", "0"))}
+
+    def _batch_videos(fn):
+        @functools.wraps(fn)
+        def w(self, video_input):
+            nfs = video_input["num_patches"].tolist()
+            T = self.video_temporal_patch_size
+            if len(nfs) < 2 or len(set(nfs)) != 1 or nfs[0] % T:
+                return fn(self, video_input)
+            hidden = self.config.text_config.hidden_size
+            emb = self.extract_feature(video_input["pixel_values_flat"][: sum(nfs)], num_frames=sum(nfs))
+            out = tuple(e.reshape(-1, hidden) for e in emb.split(nfs[0] // T, dim=0))
+            if _checks["left"] > 0:
+                _checks["left"] -= 1
+                ref = fn(self, video_input)
+                _write({"stage": "_batch_video_check", "ts": time.time(), "n_videos": len(nfs),
+                        "max_abs_diff": max(float((a.float() - b.float()).abs().max()) for a, b in zip(out, ref)),
+                        "ref_absmax": max(float(b.float().abs().max()) for b in ref)})
+            return out
+
+        return w
+
+    def _drop_sequential_video(module):
+        delattr(module.NemotronH_Nano_VL_V2, "requires_sequential_video_encoding")
+
+    _POST = {}
+    if os.environ.get("BATCH_VIDEO") == "1":
+        _POST["vllm.model_executor.models.nano_nemotron_vl"] = [_drop_sequential_video]
+
     _TARGETS = {
         "vllm.connections": [
             ("HTTPConnection.async_get_bytes", _timed("download", lambda a, k, o: {"bytes": len(o)})),
@@ -253,9 +287,12 @@ if os.environ.get("STAGE_TIMING_DIR"):
             ("GPUModelRunner._execute_mm_encoder", _gpu_timed("encoder", _encoder_items)),
         ],
         "vllm.model_executor.models.nano_nemotron_vl": [
-            ("NemotronH_Nano_VL_V2._process_video_input", _gpu_timed("encoder_video")),
-            ("NemotronH_Nano_VL_V2._process_audio_input", _gpu_timed("encoder_audio")),
-        ],
+            ("NemotronH_Nano_VL_V2._process_video_input",
+             _gpu_timed("encoder_video", lambda a, k: {"n_videos": len(a[1]["num_patches"])})),
+            ("NemotronH_Nano_VL_V2._process_audio_input",
+             _gpu_timed("encoder_audio", lambda a, k: {"n_clips": int(sum(a[1].audio_num_clips))})),
+        ] + ([("NemotronH_Nano_VL_V2._extract_video_embeddings_temporal", _batch_videos)]
+             if os.environ.get("BATCH_VIDEO") == "1" else []),
     }
 
     def _patch(module, path, make):
@@ -296,6 +333,12 @@ if os.environ.get("STAGE_TIMING_DIR"):
                         done.append(p)
                     except Exception as e:
                         failed.append(f"{p}: {e!r}")
+                for post in _POST.get(name, []):
+                    try:
+                        post(module)
+                        done.append(post.__name__)
+                    except Exception as e:
+                        failed.append(f"{post.__name__}: {e!r}")
                 _write({"stage": "_patched", "ts": time.time(), "module": name, "done": done, "failed": failed})
 
             spec.loader.exec_module = exec_and_patch

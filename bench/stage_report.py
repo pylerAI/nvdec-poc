@@ -37,7 +37,7 @@ STAGES = [  # (stage, table row)
     ("mm_hash", "hash (blake3)"),
     ("msgpack_encode", "msgpack encode to engine (>=1 MB msgs)"),
     ("encoder", "7 encoder call (all items in the step)"),
-    ("encoder_video", "7v vision encoder (per video)"),
+    ("encoder_video", "7v vision encoder (per call; 1 video/call unless batched)"),
     ("encoder_audio", "7a sound encoder (per call)"),
 ]
 
@@ -107,6 +107,7 @@ def report(run_dir, per_run=False):
     failed = sorted({f for r in patched for f in r["failed"]})
     if failed:
         print("PATCH FAILURES:", *failed, sep="\n  ")
+    recs_all = recs
     recs = drop_warmup([r for r in recs if not r["stage"].startswith("_")])
     for name, grp in groups(runs, per_run).items():
         run = grp[0]
@@ -141,7 +142,18 @@ def report(run_dir, per_run=False):
         enc = by.get("encoder", [])
         if enc:
             items = [r["n_items"] for r in enc]
-            print(f"  encoder calls: {len(enc)}, items/call mean {statistics.mean(items):.1f} max {max(items)}")
+            line = f"  encoder calls: {len(enc)}, items/call mean {statistics.mean(items):.1f} max {max(items)}"
+            ev = [r["n_videos"] for r in by.get("encoder_video", []) if "n_videos" in r]
+            ea = [r["n_clips"] for r in by.get("encoder_audio", []) if "n_clips" in r]
+            if ev:
+                line += f"; vision calls {len(ev)}, videos/call mean {statistics.mean(ev):.1f} max {max(ev)}"
+            if ea:
+                line += f"; sound calls {len(ea)}, clips/call mean {statistics.mean(ea):.1f} max {max(ea)}"
+            print(line)
+        chk = [r for r in recs_all if r["stage"] == "_batch_video_check"]
+        if chk and name == list(groups(runs, per_run))[0]:
+            print("  batched-ViT check vs per-video path: " + ", ".join(
+                f"{r['n_videos']} videos max|diff| {r['max_abs_diff']:.3g} (ref max {r['ref_absmax']:.3g})" for r in chk))
         rq = by.get("request", [])
         if rq:
             def stat(k):
