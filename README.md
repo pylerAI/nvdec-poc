@@ -33,9 +33,10 @@ GIL serialization, MPS dependence) with reproductions: [docs/nvidia-issues.md](d
 | `bench/nvdec_advice_bench.py`, `bench/remux_vllm_pattern.py` | PyNvVideoCodec microbenchmarks: decoder reuse, seek, remux, concurrency |
 | `bench/cut_shots.py` | cut a long MP4 into fixed-length shots by stream copy (re-encode with closed GOPs afterwards) |
 | `bench/live_stage_matrix.sh` | live 6 s 360p TS, per-stage matrix: sequential and 64-burst requests with stage timers; `SERVE=vllm` (`vllm serve`, real API-server processes) or `SERVE=module` (`python -m …api_server`, which runs ONE API server in vLLM 0.28.0 regardless of `--api-server-count`) |
-| `bench/stagetime/sitecustomize.py` | per-stage timers injected into every vLLM process (download, remux, NVDEC/OpenCV decode, host copy, resize/normalize, audio, encoders via CUDA events, per-request prefill/decode); `BATCH_VIDEO=1` additionally batches Nemotron's per-video ViT calls per step (experiment, bit-identical output) |
+| `bench/stagetime/sitecustomize.py` | per-stage timers injected into every vLLM process (download, remux, NVDEC/OpenCV decode, host copy, resize/normalize, audio, encoders via CUDA events, per-request prefill/decode) for Nemotron 3 Nano Omni and Qwen3-Omni; experiments: `BATCH_VIDEO=1` batches Nemotron's per-video ViT calls per step (bit-identical output), `SORT_MM=1` orders an encoder step's items by modality so audio+video requests batch |
 | `bench/make_variants.py`, `bench/seg_server.py`, `bench/live_load.py` | distinct-content copies of one segment (every request misses every cache), HTTP server for them, URL load generator |
 | `bench/stage_report.py`, `bench/proc_cpu.py` | per-stage tables from a matrix run; server CPU by process role |
+| `bench/prod/` | production live-ingest request shape (system prompt, JSON response schema from `vuf-poc`) and the serving image's `omni_modality.py` patch, for measuring the production model Qwen3-Omni with the same harness (`results/qwen3omni_live360_stages_2026-10-07.md`) |
 | `results/` | raw log and summary tables for every number in the report; live 360p stage breakdown in `results/live360_stages_2026-10-07.md` |
 
 ## Quick start (single B200)

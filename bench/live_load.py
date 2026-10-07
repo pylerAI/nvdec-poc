@@ -5,6 +5,8 @@ Env: ENDPOINT (http://localhost:8000), MODE (http = URL served by seg_server.py,
 data = base64 data URL, like load_test.py), SEG_URL (http://127.0.0.1:8890/v), SEG (segment path, data mode),
 N (requests), CONCURRENCY (N = one burst like load_test.py, 1 = sequential), USE_AUDIO (1 = use_audio_in_video),
 MEDIA_IO (JSON for media_io_kwargs), MAX_TOKENS, KEY (unique prefix for this run), LABEL, OUT (per-request jsonl).
+Production request shape (live-ingest): SYSTEM_PROMPT (adds a system message), RESPONSE_FORMAT (JSON, or @path to a
+JSON file; sent as response_format), VIDEO_URL_EXTRA (JSON merged into the video_url object, e.g. {"fps": 2.0}), PROMPT="" (no text part, video only).
 Prints the same summary lines as load_test.py.
 """
 import base64, json, os, statistics, threading, time, urllib.error, urllib.request
@@ -21,6 +23,12 @@ KEY = os.environ.get("KEY", f"run{int(time.time())}")
 LABEL = os.environ.get("LABEL", KEY)
 PROMPT = os.environ.get("PROMPT", "Describe this video briefly.")
 OUT = os.environ.get("OUT")
+SYSTEM_PROMPT = os.environ.get("SYSTEM_PROMPT")
+RESPONSE_FORMAT = os.environ.get("RESPONSE_FORMAT")
+if RESPONSE_FORMAT and RESPONSE_FORMAT.startswith("@"):
+    RESPONSE_FORMAT = open(RESPONSE_FORMAT[1:]).read()
+RESPONSE_FORMAT = json.loads(RESPONSE_FORMAT) if RESPONSE_FORMAT else None
+VIDEO_URL_EXTRA = json.loads(os.environ.get("VIDEO_URL_EXTRA") or "{}")
 
 if MODE == "data":
     BASE = open(os.environ["SEG"], "rb").read()
@@ -33,13 +41,14 @@ else:
 def body(i):
     b = {
         "model": "omni-v1",
-        "messages": [{"role": "user", "content": [
-            {"type": "video_url", "video_url": {"url": url_of(f"{KEY}-{i}")}},
-            {"type": "text", "text": PROMPT},
-        ]}],
+        "messages": ([{"role": "system", "content": SYSTEM_PROMPT}] if SYSTEM_PROMPT else []) + [{"role": "user", "content": [
+            {"type": "video_url", "video_url": {"url": url_of(f"{KEY}-{i}"), **VIDEO_URL_EXTRA}},
+        ] + ([{"type": "text", "text": PROMPT}] if PROMPT else [])}],
         "max_tokens": MAX_TOKENS, "temperature": 0.1,
         "chat_template_kwargs": {"enable_thinking": False},
     }
+    if RESPONSE_FORMAT:
+        b["response_format"] = RESPONSE_FORMAT
     if USE_AUDIO:
         b["mm_processor_kwargs"] = {"use_audio_in_video": True}
     if os.environ.get("MEDIA_IO"):

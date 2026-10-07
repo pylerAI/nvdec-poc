@@ -15,6 +15,12 @@ set -u
 LABEL=$1; MEDIA_IO=$2; shift 2
 ASC=${ASC:-12}; N1=${N1:-24}; REPS=${REPS:-3}
 MODEL=${MODEL:-nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16}
+# Server shape; defaults reproduce bench/e2e_matrix.sh (Nemotron). For the production Qwen3-Omni shape set
+# REASONING_PARSER= (empty), MAX_MODEL_LEN/MAX_BATCHED 49152, GPU_UTIL 0.9, MM_KWARGS, STRUCTURED (see values.yaml).
+REASONING_PARSER=${REASONING_PARSER-nemotron_v3}; MAX_MODEL_LEN=${MAX_MODEL_LEN:-32768}; MAX_BATCHED=${MAX_BATCHED:-32768}
+GPU_UTIL=${GPU_UTIL:-0.85}; MM_KWARGS=${MM_KWARGS:-}; STRUCTURED=${STRUCTURED:-}
+SHAPE=(); [ -n "$REASONING_PARSER" ] && SHAPE+=(--reasoning-parser "$REASONING_PARSER")
+[ -n "$MM_KWARGS" ] && SHAPE+=(--mm-processor-kwargs "$MM_KWARGS"); [ -n "$STRUCTURED" ] && SHAPE+=(--structured-outputs-config "$STRUCTURED")
 SEG=${SEG:-$HOME/nvdec-runs/variants}; [ -e "$SEG" ] || SEG=/gpfs/private/garam/nvdec-bench-2026-09-17/seg6.ts
 BENCH=$(cd "$(dirname "$0")" && pwd)
 OUT=${OUT:-$HOME/nvdec-runs/$LABEL-$(date +%m%d-%H%M)}; mkdir -p "$OUT/stages"
@@ -36,11 +42,12 @@ python "$BENCH/seg_server.py" "$SEG" 8890 & SEGSRV=$!
 TIMERS=(); [ "${STAGE_TIMING:-1}" = "1" ] && TIMERS=(env "STAGE_TIMING_DIR=$OUT/stages" "PYTHONPATH=$BENCH/stagetime${PYTHONPATH:+:$PYTHONPATH}")
 if [ "${SERVE:-vllm}" = "module" ]; then LAUNCH=(python -m vllm.entrypoints.openai.api_server --model "$MODEL"); else LAUNCH=(vllm serve "$MODEL"); fi
 nohup "${TIMERS[@]}" "${LAUNCH[@]}" --served-model-name omni-v1 --trust-remote-code \
-  --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.85 --max-model-len 32768 \
-  --api-server-count "$ASC" --max-num-batched-tokens 32768 \
+  --host 0.0.0.0 --port 8000 --gpu-memory-utilization "$GPU_UTIL" --max-model-len "$MAX_MODEL_LEN" \
+  --api-server-count "$ASC" --max-num-batched-tokens "$MAX_BATCHED" \
   --limit-mm-per-prompt '{"video":1,"audio":1}' --media-io-kwargs "$MEDIA_IO" \
-  --reasoning-parser nemotron_v3 "$@" > "$OUT/vllm.log" 2>&1 &
-echo "server starting (label=$LABEL serve=${SERVE:-vllm} asc=$ASC seg=$SEG media-io=$MEDIA_IO timers=${STAGE_TIMING:-1} extra: $*) -> $OUT"
+  "${SHAPE[@]}" "$@" > "$OUT/vllm.log" 2>&1 &
+echo "server starting (label=$LABEL model=$MODEL serve=${SERVE:-vllm} asc=$ASC seg=$SEG media-io=$MEDIA_IO shape: ${SHAPE[*]} timers=${STAGE_TIMING:-1} extra: $*) -> $OUT"
+echo "request shape: SYSTEM_PROMPT=${SYSTEM_PROMPT:+set} PROMPT=${PROMPT:-default} MAX_TOKENS=${MAX_TOKENS:-64} RESPONSE_FORMAT=${RESPONSE_FORMAT:+set} VIDEO_URL_FPS=${VIDEO_URL_FPS:-}"
 for i in $(seq 1 180); do curl -sf -m 3 localhost:8000/v1/models >/dev/null 2>&1 && { echo "ready after ~$((i*10))s"; break; }; sleep 10; done
 curl -sf -m 3 localhost:8000/v1/models >/dev/null || { echo "SERVER NOT READY"; grep -E "Error|Traceback" "$OUT/vllm.log" | tail -5; cleanup; exit 1; }
 

@@ -28,12 +28,12 @@ STAGES = [  # (stage, table row)
     ("audio_decode_pyav", "6b'' PyAV AAC decode"),
     ("process_for_engine", "5-6 processor incl. wait for the 1 mm thread"),
     ("mm_process", "5-6 processor (mm thread)"),
-    ("hf_processor", "5-6 HF processor call"),
+    ("hf_processor", "5-6 HF processor call (video + audio + tokenize)"),
     ("video_preprocess", "5 video preprocess"),
-    ("video_resize_norm", "5 resize+normalize (torch.compile, CPU)"),
+    ("video_resize_norm", "5 resize+normalize+patchify (CPU)"),
     ("audio_resample", "6c resample to 16 kHz"),
     ("audio_preprocess", "6d audio preprocess"),
-    ("audio_mel", "6d mel (ParakeetExtractor)"),
+    ("audio_mel", "6d mel features (CPU)"),
     ("mm_hash", "hash (blake3)"),
     ("msgpack_encode", "msgpack encode to engine (>=1 MB msgs)"),
     ("encoder", "7 encoder call (all items in the step)"),
@@ -137,7 +137,7 @@ def report(run_dir, per_run=False):
             print(row)
         extras = {s: by[s][0] for s in ("video_resize_norm", "video_decode_total", "audio_decode", "d2h") if by.get(s)}
         for s, r in extras.items():
-            shown = {k: r[k] for k in ("in", "out", "dtype", "frames", "backend", "samples", "sr", "bytes") if k in r}
+            shown = {k: r[k] for k in ("in", "out", "grid_thw", "dtype", "frames", "backend", "samples", "sr", "bytes") if k in r}
             print(f"  {s}: {shown}")
         enc = by.get("encoder", [])
         if enc:

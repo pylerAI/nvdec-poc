@@ -13,6 +13,8 @@ Table stage -> records: 1 download | 2 remux | 3 nvdec_probe + nvdec_decode, or 
 4 d2h | 5 video_resize_norm (inside video_preprocess) | 6 fetch_audio (download + audio_decode), audio_resample,
 audio_mel | frontend totals: render_messages, process_for_engine (= mm thread queue + mm_process), mm_hash,
 msgpack_encode | 7 encoder (encoder_video, encoder_audio) | 8, 9 request (vLLM's per-request prefill/decode times).
+Models: Nemotron 3 Nano Omni (vLLM's own processor + ParakeetExtractor) and Qwen3-Omni (transformers'
+Qwen3OmniMoeProcessor, Qwen2VLVideoProcessor, WhisperFeatureExtractor); the stage names are shared.
 """
 import os
 
@@ -229,6 +231,35 @@ if os.environ.get("STAGE_TIMING_DIR"):
     if os.environ.get("BATCH_VIDEO") == "1":
         _POST["vllm.model_executor.models.nano_nemotron_vl"] = [_drop_sequential_video]
 
+    # --- Experiment (SORT_MM=1): order an encoder step's items by modality before batching. The runner emits them
+    # per request ([video, audio, video, audio, ...]) and group_and_batch_mm_kwargs only merges consecutive items of
+    # one modality, so audio+video requests run the vision/audio encoders once per item. Outputs are cached by
+    # mm_hash (zip with the reordered hashes), so a stable sort of the three parallel lists is order-safe.
+    def _sort_mm_by_modality(fn):
+        @functools.wraps(fn)
+        def w(self, scheduler_output):
+            hashes, kwargs, refs = fn(self, scheduler_output)
+            if len(kwargs) > 1:
+                order = sorted(range(len(kwargs)), key=lambda i: kwargs[i][0])
+                hashes, kwargs, refs = [hashes[i] for i in order], [kwargs[i] for i in order], [refs[i] for i in order]
+            return hashes, kwargs, refs
+
+        return w
+
+    def _qwen_video_extra(a, k, o):
+        vids = a[1] if len(a) > 1 else k.get("videos")
+        rec = {}
+        try:
+            rec["in"] = [len(vids)] + list(vids[0].shape)
+        except Exception:
+            pass
+        try:
+            rec["out"] = _shape(o["pixel_values_videos"])
+            rec["grid_thw"] = o["video_grid_thw"].tolist()
+        except Exception:
+            pass
+        return rec
+
     _TARGETS = {
         "vllm.connections": [
             ("HTTPConnection.async_get_bytes", _timed("download", lambda a, k, o: {"bytes": len(o)})),
@@ -285,6 +316,23 @@ if os.environ.get("STAGE_TIMING_DIR"):
         ],
         "vllm.v1.worker.gpu_model_runner": [
             ("GPUModelRunner._execute_mm_encoder", _gpu_timed("encoder", _encoder_items)),
+        ] + ([("GPUModelRunner._batch_mm_inputs_from_scheduler", _sort_mm_by_modality)]
+             if os.environ.get("SORT_MM") == "1" else []),
+        # Qwen3-Omni (production live model): preprocessing runs in transformers' processors.
+        "transformers.models.qwen3_omni_moe.processing_qwen3_omni_moe": [
+            ("Qwen3OmniMoeProcessor.__call__", _timed("hf_processor")),
+        ],
+        "transformers.models.qwen2_vl.video_processing_qwen2_vl": [
+            ("Qwen2VLVideoProcessor._preprocess", _timed("video_resize_norm", _qwen_video_extra)),
+        ],
+        "transformers.models.whisper.feature_extraction_whisper": [
+            ("WhisperFeatureExtractor.__call__", _timed("audio_mel")),
+        ],
+        "vllm.model_executor.models.qwen3_omni_moe_thinker": [
+            ("Qwen3OmniMoeThinkerForConditionalGeneration._process_video_input",
+             _gpu_timed("encoder_video", lambda a, k: {"n_videos": int(a[1]["video_grid_thw"].shape[0])})),
+            ("Qwen3OmniMoeThinkerForConditionalGeneration._process_audio_input",
+             _gpu_timed("encoder_audio", lambda a, k: {"n_clips": int(a[1]["audio_feature_lengths"].shape[0])})),
         ],
         "vllm.model_executor.models.nano_nemotron_vl": [
             ("NemotronH_Nano_VL_V2._process_video_input",
