@@ -1,0 +1,279 @@
+mps: 1 procs
+server starting (label=nvdec-asc12 serve=vllm asc=12 seg=/home/garam/nvdec-runs/variants media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":2,"num_frames":128}} timers=1 extra: ) -> /home/garam/nvdec-runs/live360-nvdec-asc12
+seg_server: 800 copies of /home/garam/nvdec-runs/variants on :8890
+ready after ~190s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== nvdec-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.4s throughput=7.6 req/s
+  latency p50=8.32s p90=8.35s p95=8.36s max=8.37s min=8.25s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 5/5 1/0 39/0 39/0 39/0 39/0 
+=== nvdec-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.0s throughput=12.8 req/s
+  latency p50=4.89s p90=4.97s p95=4.97s max=4.98s min=4.63s
+  prompt_tokens avg=1705 completion_tokens avg=58.2
+  gpu samples (sm%/dec%): 1/0 54/0 37/0 38/0 53/0 
+=== nvdec-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=5.1s throughput=12.4 req/s
+  latency p50=5.08s p90=5.11s p95=5.11s max=5.12s min=5.04s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 52/0 37/0 58/0 37/0 14/0 
+=== nvdec-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.8s throughput=13.4 req/s
+  latency p50=4.69s p90=4.73s p95=4.73s max=4.74s min=4.44s
+  prompt_tokens avg=1705 completion_tokens avg=60.3
+  gpu samples (sm%/dec%): 37/0 39/0 38/0 54/0 14/0 
+## sequential: per-request stage cost
+=== nvdec-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=12.2s throughput=2.0 req/s
+  latency p50=0.51s p90=0.53s p95=0.53s max=0.54s min=0.48s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 17/0 3/0 3/0 9/0 5/3 17/3 17/3 20/3 27/3 
+=== nvdec-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=17.1s throughput=1.4 req/s
+  latency p50=0.74s p90=0.76s p95=0.76s max=0.76s min=0.64s
+  prompt_tokens avg=1705 completion_tokens avg=59.0
+  gpu samples (sm%/dec%): 2/2 35/0 36/0 2/0 36/0 2/2 36/0 6/3 28/0 35/0 28/0 36/0 10/3 35/0 35/0 23/0 36/0 
+## burst rep 1
+=== nvdec-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.9s throughput=13.0 req/s
+  latency p50=4.87s p90=4.90s p95=4.90s max=4.91s min=4.83s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 33/0 25/0 63/0 38/0 44/0 
+=== nvdec-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.8s throughput=13.4 req/s
+  latency p50=4.70s p90=4.74s p95=4.75s max=4.76s min=4.41s
+  prompt_tokens avg=1705 completion_tokens avg=58.5
+  gpu samples (sm%/dec%): 33/0 39/0 38/0 43/0 39/0 
+## burst rep 2
+=== nvdec-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.9s throughput=13.0 req/s
+  latency p50=4.85s p90=4.88s p95=4.88s max=4.89s min=4.81s
+  prompt_tokens avg=1784 completion_tokens avg=15.1
+  gpu samples (sm%/dec%): 47/0 35/0 26/0 45/0 25/0 
+=== nvdec-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.8s throughput=13.4 req/s
+  latency p50=4.70s p90=4.73s p95=4.74s max=4.75s min=4.39s
+  prompt_tokens avg=1705 completion_tokens avg=59.3
+  gpu samples (sm%/dec%): 55/0 47/0 38/0 44/0 
+## burst rep 3
+=== nvdec-asc12/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.9s throughput=13.0 req/s
+  latency p50=4.84s p90=4.87s p95=4.87s max=4.89s min=4.80s
+  prompt_tokens avg=1784 completion_tokens avg=15.1
+  gpu samples (sm%/dec%): 34/0 39/0 8/0 56/0 46/0 
+=== nvdec-asc12/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.9s throughput=13.1 req/s
+  latency p50=4.77s p90=4.84s p95=4.85s max=4.87s min=4.52s
+  prompt_tokens avg=1705 completion_tokens avg=57.6
+  gpu samples (sm%/dec%): 46/0 38/0 38/0 40/0 51/0 
+## done nvdec-asc12 -> /home/garam/nvdec-runs/live360-nvdec-asc12
+server starting (label=cpu-asc12 serve=vllm asc=12 seg=/home/garam/nvdec-runs/variants media-io={"video":{"backend":"opencv","fps":2,"num_frames":128}} timers=1 extra: ) -> /home/garam/nvdec-runs/live360-cpu-asc12
+seg_server: 800 copies of /home/garam/nvdec-runs/variants on :8890
+ready after ~100s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== cpu-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.3s throughput=10.1 req/s
+  latency p50=6.26s p90=6.28s p95=6.29s max=6.31s min=6.21s
+  prompt_tokens avg=1771 completion_tokens avg=15.2
+  gpu samples (sm%/dec%): 2/0 38/0 29/0 68/0 48/0 
+=== cpu-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.9s throughput=13.0 req/s
+  latency p50=4.85s p90=4.89s p95=4.90s max=4.91s min=4.56s
+  prompt_tokens avg=1692 completion_tokens avg=59.1
+  gpu samples (sm%/dec%): 33/0 38/0 38/0 37/0 56/0 
+=== cpu-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.9s throughput=13.1 req/s
+  latency p50=4.82s p90=4.85s p95=4.86s max=4.88s min=4.77s
+  prompt_tokens avg=1771 completion_tokens avg=15.4
+  gpu samples (sm%/dec%): 35/0 39/0 46/0 42/0 39/0 
+=== cpu-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.0s throughput=12.9 req/s
+  latency p50=4.88s p90=4.93s p95=4.93s max=4.95s min=4.56s
+  prompt_tokens avg=1692 completion_tokens avg=58.4
+  gpu samples (sm%/dec%): 34/0 37/0 30/0 36/0 53/0 
+## sequential: per-request stage cost
+=== cpu-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=12.0s throughput=2.0 req/s
+  latency p50=0.50s p90=0.52s p95=0.53s max=0.54s min=0.46s
+  prompt_tokens avg=1771 completion_tokens avg=15.2
+  gpu samples (sm%/dec%): 28/0 23/0 23/0 15/0 16/0 15/0 13/0 13/0 13/0 16/0 12/0 14/0 
+=== cpu-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=17.3s throughput=1.4 req/s
+  latency p50=0.73s p90=0.75s p95=0.75s max=0.92s min=0.63s
+  prompt_tokens avg=1692 completion_tokens avg=59.3
+  gpu samples (sm%/dec%): 36/0 35/0 25/0 33/0 3/0 31/0 35/0 27/0 34/0 32/0 31/0 35/0 15/0 35/0 29/0 28/0 
+## burst rep 1
+=== cpu-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.9s throughput=13.1 req/s
+  latency p50=4.82s p90=4.85s p95=4.86s max=4.87s min=4.78s
+  prompt_tokens avg=1771 completion_tokens avg=15.1
+  gpu samples (sm%/dec%): 34/0 37/0 38/0 41/0 31/0 
+=== cpu-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.8s throughput=13.4 req/s
+  latency p50=4.69s p90=4.73s p95=4.73s max=4.74s min=4.43s
+  prompt_tokens avg=1692 completion_tokens avg=59.7
+  gpu samples (sm%/dec%): 35/0 37/0 37/0 44/0 
+## burst rep 2
+=== cpu-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=5.0s throughput=12.9 req/s
+  latency p50=4.88s p90=4.90s p95=4.91s max=4.92s min=4.82s
+  prompt_tokens avg=1771 completion_tokens avg=15.3
+  gpu samples (sm%/dec%): 32/0 26/0 64/0 38/0 45/0 
+=== cpu-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.7s throughput=13.7 req/s
+  latency p50=4.60s p90=4.63s p95=4.64s max=4.65s min=4.27s
+  prompt_tokens avg=1692 completion_tokens avg=58.8
+  gpu samples (sm%/dec%): 52/0 56/0 56/0 35/0 
+## burst rep 3
+=== cpu-asc12/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.8s throughput=13.2 req/s
+  latency p50=4.76s p90=4.80s p95=4.80s max=4.81s min=4.72s
+  prompt_tokens avg=1771 completion_tokens avg=15.5
+  gpu samples (sm%/dec%): 33/0 22/0 66/0 38/0 45/0 
+=== cpu-asc12/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.8s throughput=13.4 req/s
+  latency p50=4.68s p90=4.76s p95=4.76s max=4.77s min=4.33s
+  prompt_tokens avg=1692 completion_tokens avg=57.5
+  gpu samples (sm%/dec%): 35/0 37/0 37/0 44/0 32/0 
+## done cpu-asc12 -> /home/garam/nvdec-runs/live360-cpu-asc12
+mps: 1 procs
+server starting (label=nvdec-asc1 serve=module asc=12 seg=/home/garam/nvdec-runs/variants media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":2,"num_frames":128}} timers=1 extra: ) -> /home/garam/nvdec-runs/live360-nvdec-asc1
+seg_server: 800 copies of /home/garam/nvdec-runs/variants on :8890
+ready after ~90s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== nvdec-asc1/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=9.1s throughput=7.0 req/s
+  latency p50=8.97s p90=9.06s p95=9.07s max=9.09s min=7.56s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 17/19 17/0 45/0 39/0 12/0 34/0 39/0 24/0 
+=== nvdec-asc1/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.7s throughput=8.3 req/s
+  latency p50=7.43s p90=7.60s p95=7.63s max=7.66s min=7.07s
+  prompt_tokens avg=1705 completion_tokens avg=59.7
+  gpu samples (sm%/dec%): 43/22 33/0 32/0 34/0 30/0 32/0 27/0 19/0 
+=== nvdec-asc1/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.1s throughput=7.9 req/s
+  latency p50=7.95s p90=8.06s p95=8.06s max=8.06s min=5.46s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 21/24 12/0 40/0 15/0 41/0 31/0 32/0 23/0 
+=== nvdec-asc1/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.9s throughput=8.1 req/s
+  latency p50=7.62s p90=7.82s p95=7.85s max=7.88s min=7.20s
+  prompt_tokens avg=1705 completion_tokens avg=60.7
+  gpu samples (sm%/dec%): 48/22 34/0 35/0 34/0 31/0 30/0 31/0 50/0 
+## sequential: per-request stage cost
+=== nvdec-asc1/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=11.1s throughput=2.2 req/s
+  latency p50=0.46s p90=0.47s p95=0.47s max=0.48s min=0.45s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 14/0 33/0 31/1 6/3 13/0 28/0 15/0 37/0 22/3 20/0 
+=== nvdec-asc1/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=16.7s throughput=1.4 req/s
+  latency p50=0.69s p90=0.70s p95=0.70s max=1.30s min=0.61s
+  prompt_tokens avg=1705 completion_tokens avg=59.6
+  gpu samples (sm%/dec%): 19/3 37/0 25/3 37/0 38/0 37/0 7/3 37/0 26/0 37/0 27/0 38/0 16/0 36/0 8/0 36/0 
+## burst rep 1
+=== nvdec-asc1/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.0s throughput=8.0 req/s
+  latency p50=7.84s p90=7.94s p95=7.95s max=7.95s min=4.90s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 33/12 24/0 39/0 23/0 38/0 31/0 41/0 43/0 
+=== nvdec-asc1/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.9s throughput=8.1 req/s
+  latency p50=7.57s p90=7.78s p95=7.80s max=7.85s min=7.19s
+  prompt_tokens avg=1705 completion_tokens avg=59.0
+  gpu samples (sm%/dec%): 44/23 30/0 32/0 36/0 34/0 33/0 32/0 38/0 
+## burst rep 2
+=== nvdec-asc1/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.2s throughput=7.8 req/s
+  latency p50=8.04s p90=8.13s p95=8.14s max=8.14s min=5.61s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 21/25 36/0 17/0 39/0 18/0 38/0 16/0 42/0 
+=== nvdec-asc1/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.7s throughput=8.3 req/s
+  latency p50=7.38s p90=7.60s p95=7.63s max=7.67s min=7.02s
+  prompt_tokens avg=1705 completion_tokens avg=58.9
+  gpu samples (sm%/dec%): 43/22 30/0 28/0 27/0 27/0 31/0 37/0 
+## burst rep 3
+=== nvdec-asc1/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.2s throughput=7.8 req/s
+  latency p50=8.06s p90=8.16s p95=8.16s max=8.17s min=5.64s
+  prompt_tokens avg=1784 completion_tokens avg=15.0
+  gpu samples (sm%/dec%): 21/24 24/0 38/0 16/0 28/0 42/0 34/0 23/0 
+=== nvdec-asc1/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.8s throughput=8.3 req/s
+  latency p50=7.46s p90=7.68s p95=7.69s max=7.73s min=7.01s
+  prompt_tokens avg=1705 completion_tokens avg=59.4
+  gpu samples (sm%/dec%): 44/23 31/0 36/0 36/0 28/0 28/0 29/0 
+## done nvdec-asc1 -> /home/garam/nvdec-runs/live360-nvdec-asc1
+server starting (label=cpu-asc1 serve=module asc=12 seg=/home/garam/nvdec-runs/variants media-io={"video":{"backend":"opencv","fps":2,"num_frames":128}} timers=1 extra: ) -> /home/garam/nvdec-runs/live360-cpu-asc1
+seg_server: 800 copies of /home/garam/nvdec-runs/variants on :8890
+ready after ~90s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== cpu-asc1/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.5s throughput=7.6 req/s
+  latency p50=8.29s p90=8.37s p95=8.38s max=8.44s min=7.13s
+  prompt_tokens avg=1771 completion_tokens avg=15.7
+  gpu samples (sm%/dec%): 17/0 42/0 41/0 24/0 20/0 37/0 44/0 
+=== cpu-asc1/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.4s throughput=8.7 req/s
+  latency p50=7.07s p90=7.23s p95=7.24s max=7.31s min=6.64s
+  prompt_tokens avg=1692 completion_tokens avg=56.4
+  gpu samples (sm%/dec%): 23/0 31/0 35/0 31/0 31/0 36/0 55/0 
+=== cpu-asc1/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.0s throughput=8.0 req/s
+  latency p50=7.85s p90=7.94s p95=7.95s max=8.00s min=5.42s
+  prompt_tokens avg=1771 completion_tokens avg=15.5
+  gpu samples (sm%/dec%): 30/0 26/0 37/0 36/0 28/0 39/0 40/0 
+=== cpu-asc1/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.2s throughput=8.9 req/s
+  latency p50=6.96s p90=7.09s p95=7.11s max=7.19s min=6.65s
+  prompt_tokens avg=1692 completion_tokens avg=57.4
+  gpu samples (sm%/dec%): 21/0 32/0 34/0 36/0 34/0 35/0 59/0 
+## sequential: per-request stage cost
+=== cpu-asc1/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=12.8s throughput=1.9 req/s
+  latency p50=0.53s p90=0.56s p95=0.58s max=0.58s min=0.51s
+  prompt_tokens avg=1771 completion_tokens avg=15.8
+  gpu samples (sm%/dec%): 9/0 21/0 35/0 32/0 16/0 20/0 13/0 16/0 32/0 36/0 
+=== cpu-asc1/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=17.7s throughput=1.4 req/s
+  latency p50=0.75s p90=0.77s p95=0.79s max=0.79s min=0.66s
+  prompt_tokens avg=1692 completion_tokens avg=59.6
+  gpu samples (sm%/dec%): 5/0 26/0 34/0 25/0 34/0 24/0 33/0 1/0 35/0 35/0 24/0 34/0 29/0 35/0 
+## burst rep 1
+=== cpu-asc1/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=7.7s throughput=8.3 req/s
+  latency p50=7.61s p90=7.68s p95=7.71s max=7.71s min=5.28s
+  prompt_tokens avg=1771 completion_tokens avg=15.3
+  gpu samples (sm%/dec%): 14/0 33/0 39/0 42/0 40/0 17/0 
+=== cpu-asc1/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.1s throughput=9.0 req/s
+  latency p50=6.85s p90=6.98s p95=7.01s max=7.07s min=6.45s
+  prompt_tokens avg=1692 completion_tokens avg=56.5
+  gpu samples (sm%/dec%): 20/0 35/0 34/0 34/0 33/0 31/0 57/0 
+## burst rep 2
+=== cpu-asc1/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=7.9s throughput=8.1 req/s
+  latency p50=7.78s p90=7.87s p95=7.88s max=7.90s min=5.11s
+  prompt_tokens avg=1771 completion_tokens avg=15.3
+  gpu samples (sm%/dec%): 31/0 39/0 43/0 23/0 41/0 20/0 20/0 
+=== cpu-asc1/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.2s throughput=8.8 req/s
+  latency p50=7.02s p90=7.16s p95=7.16s max=7.21s min=6.66s
+  prompt_tokens avg=1692 completion_tokens avg=57.7
+  gpu samples (sm%/dec%): 23/0 31/0 34/0 33/0 30/0 36/0 57/0 
+## burst rep 3
+=== cpu-asc1/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=7.7s throughput=8.3 req/s
+  latency p50=7.56s p90=7.64s p95=7.67s max=7.68s min=5.55s
+  prompt_tokens avg=1771 completion_tokens avg=15.6
+  gpu samples (sm%/dec%): 28/0 27/0 29/0 34/0 40/0 23/0 
+=== cpu-asc1/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=7.5s throughput=8.6 req/s
+  latency p50=7.21s p90=7.36s p95=7.39s max=7.45s min=6.83s
+  prompt_tokens avg=1692 completion_tokens avg=58.1
+  gpu samples (sm%/dec%): 24/0 30/0 27/0 34/0 36/0 34/0 56/0 
+## done cpu-asc1 -> /home/garam/nvdec-runs/live360-cpu-asc1
+CHAIN_DONE

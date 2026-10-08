@@ -1,0 +1,523 @@
+server starting (label=vod-1080p-prod model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=3 seg=/home/garam/nvdec-runs/vod/clips_1080p_14s media-io={"video":{"backend":"opencv"}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/vod-1080p-prod
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 230 clips (.mp4) of /home/garam/nvdec-runs/vod/clips_1080p_14s on :8890, 230 with .wav audio
+ready after ~160s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== vod-1080p-prod/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=32.9s throughput=1.9 req/s
+  latency p50=31.16s p90=31.98s p95=32.27s max=32.88s min=28.65s
+  prompt_tokens avg=8728 completion_tokens avg=346.6
+  gpu samples (sm%/dec%): 23/0 92/0 33/0 88/0 33/0 31/0 90/0 33/0 29/0 83/0 80/0 28/0 41/0 34/0 29/0 28/0 28/0 29/0 32/0 37/0 37/0 44/0 54/0 55/0 59/0 30/0 
+=== vod-1080p-prod/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=28.9s throughput=2.2 req/s
+  latency p50=26.40s p90=28.26s p95=28.45s max=28.91s min=22.01s
+  prompt_tokens avg=8287 completion_tokens avg=340.5
+  gpu samples (sm%/dec%): 25/0 48/0 44/0 46/0 47/0 52/0 42/0 33/0 35/0 43/0 46/0 29/0 28/0 28/0 38/0 29/0 33/0 29/0 30/0 44/0 47/0 44/0 52/0 59/0 53/0 51/0 
+=== vod-1080p-prod/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=30.0s throughput=2.1 req/s
+  latency p50=28.20s p90=29.50s p95=29.65s max=29.99s min=26.15s
+  prompt_tokens avg=8658 completion_tokens avg=345.0
+  gpu samples (sm%/dec%): 32/0 30/0 38/0 33/0 83/0 33/0 73/0 49/0 36/0 75/0 47/0 25/0 32/0 40/0 31/0 31/0 34/0 32/0 40/0 29/0 38/0 43/0 45/0 47/0 48/0 55/0 
+=== vod-1080p-prod/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=24.9s throughput=2.6 req/s
+  latency p50=23.49s p90=24.16s p95=24.37s max=24.86s min=20.77s
+  prompt_tokens avg=8502 completion_tokens avg=279.5
+  gpu samples (sm%/dec%): 23/0 44/0 66/0 42/0 40/0 46/0 45/0 53/0 72/0 66/0 64/0 27/0 32/0 42/0 27/0 34/0 44/0 45/0 50/0 52/0 57/0 
+## sequential: per-request stage cost
+=== vod-1080p-prod/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=81.4s throughput=0.3 req/s
+  latency p50=3.38s p90=3.63s p95=3.83s max=3.96s min=2.90s
+  prompt_tokens avg=8705 completion_tokens avg=332.5
+  gpu samples (sm%/dec%): 28/0 53/0 56/0 51/0 50/0 54/0 51/0 55/0 55/0 52/0 54/0 52/0 52/0 55/0 52/0 53/0 22/0 36/0 54/0 55/0 55/0 58/0 54/0 54/0 52/0 54/0 56/0 53/0 58/0 52/0 53/0 51/0 
+=== vod-1080p-prod/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=78.1s throughput=0.3 req/s
+  latency p50=3.12s p90=3.67s p95=3.97s max=4.30s min=2.55s
+  prompt_tokens avg=8521 completion_tokens avg=327.2
+  gpu samples (sm%/dec%): 54/0 55/0 55/0 54/0 53/0 56/0 54/0 58/0 53/0 53/0 55/0 11/0 53/0 55/0 53/0 50/0 52/0 51/0 55/0 52/0 55/0 52/0 52/0 25/0 53/0 52/0 40/0 52/0 52/0 58/0 54/0 55/0 
+## burst rep 1, concurrency 8
+=== vod-1080p-prod/burst1-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=7.4s throughput=1.1 req/s
+  latency p50=7.12s p90=7.40s p95=7.40s max=7.40s min=6.21s
+  prompt_tokens avg=8556 completion_tokens avg=388.9
+  gpu samples (sm%/dec%): 52/0 45/0 44/0 45/0 54/0 57/0 
+=== vod-1080p-prod/burst1-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=7.1s throughput=1.1 req/s
+  latency p50=5.92s p90=7.05s p95=7.05s max=7.05s min=5.05s
+  prompt_tokens avg=8222 completion_tokens avg=344.9
+  gpu samples (sm%/dec%): 44/0 55/0 50/0 57/0 56/0 52/0 
+## burst rep 1, concurrency 64
+=== vod-1080p-prod/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=30.2s throughput=2.1 req/s
+  latency p50=28.40s p90=29.48s p95=29.76s max=30.21s min=22.91s
+  prompt_tokens avg=8481 completion_tokens avg=363.3
+  gpu samples (sm%/dec%): 34/0 32/0 36/0 33/0 31/0 32/0 32/0 32/0 70/0 38/0 27/0 28/0 40/0 29/0 29/0 32/0 30/0 28/0 28/0 34/0 46/0 48/0 45/0 48/0 50/0 52/0 
+=== vod-1080p-prod/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=26.2s throughput=2.4 req/s
+  latency p50=23.82s p90=24.98s p95=25.70s max=26.22s min=20.33s
+  prompt_tokens avg=8521 completion_tokens avg=285.1
+  gpu samples (sm%/dec%): 6/0 43/0 65/0 45/0 48/0 50/0 42/0 37/0 70/0 66/0 69/0 52/0 34/0 40/0 38/0 30/0 42/0 41/0 45/0 49/0 44/0 60/0 56/0 
+## burst rep 2, concurrency 8
+=== vod-1080p-prod/burst2-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=7.2s throughput=1.1 req/s
+  latency p50=6.45s p90=7.15s p95=7.15s max=7.15s min=6.09s
+  prompt_tokens avg=8518 completion_tokens avg=340.4
+  gpu samples (sm%/dec%): 32/0 43/0 45/0 51/0 54/0 57/0 
+=== vod-1080p-prod/burst2-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=6.0s throughput=1.3 req/s
+  latency p50=5.54s p90=5.99s p95=5.99s max=5.99s min=5.05s
+  prompt_tokens avg=8446 completion_tokens avg=286.4
+  gpu samples (sm%/dec%): 64/0 49/0 51/0 54/0 55/0 
+## burst rep 2, concurrency 64
+=== vod-1080p-prod/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=29.3s throughput=2.2 req/s
+  latency p50=27.85s p90=28.77s p95=28.81s max=29.24s min=25.66s
+  prompt_tokens avg=8719 completion_tokens avg=342.1
+  gpu samples (sm%/dec%): 37/0 30/0 74/0 74/0 74/0 74/0 31/0 31/0 32/0 30/0 28/0 32/0 38/0 40/0 29/0 29/0 29/0 29/0 38/0 36/0 41/0 47/0 51/0 47/0 55/0 
+=== vod-1080p-prod/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=27.8s throughput=2.3 req/s
+  latency p50=25.25s p90=27.08s p95=27.17s max=27.83s min=21.09s
+  prompt_tokens avg=8269 completion_tokens avg=347.2
+  gpu samples (sm%/dec%): 11/0 50/0 48/0 52/0 47/0 35/0 45/0 68/0 35/0 45/0 52/0 40/0 40/0 36/0 37/0 28/0 41/0 39/0 33/0 44/0 43/0 39/0 54/0 58/0 61/0 57/0 
+## done vod-1080p-prod -> /home/garam/nvdec-runs/vod-1080p-prod
+mps: 1 procs
+server starting (label=vod-1080p-nvdec model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=3 seg=/home/garam/nvdec-runs/vod/clips_1080p_14s media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/vod-1080p-nvdec
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 230 clips (.mp4) of /home/garam/nvdec-runs/vod/clips_1080p_14s on :8890, 230 with .wav audio
+ready after ~140s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== vod-1080p-nvdec/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=37.7s throughput=1.7 req/s
+  latency p50=31.61s p90=32.52s p95=33.20s max=37.66s min=29.83s
+  prompt_tokens avg=8728 completion_tokens avg=364.3
+  gpu samples (sm%/dec%): 20/74 19/55 16/59 20/48 2/0 33/0 26/0 34/0 31/0 85/0 32/0 35/0 91/0 38/0 34/0 23/0 29/0 43/0 29/0 27/0 34/0 29/0 29/0 29/0 44/0 45/0 50/0 41/0 50/0 59/0 56/0 58
+=== vod-1080p-nvdec/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=24.8s throughput=2.6 req/s
+  latency p50=22.27s p90=23.78s p95=24.34s max=24.76s min=18.24s
+  prompt_tokens avg=8287 completion_tokens avg=338.4
+  gpu samples (sm%/dec%): 31/72 57/74 42/0 47/0 37/0 68/0 56/0 33/0 48/0 36/0 33/0 30/0 29/0 36/0 28/0 35/0 29/0 29/0 36/0 45/0 51/0 56/0 52/0 63/0 
+=== vod-1080p-nvdec/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=30.5s throughput=2.1 req/s
+  latency p50=26.12s p90=27.52s p95=27.62s max=30.51s min=23.22s
+  prompt_tokens avg=8658 completion_tokens avg=350.3
+  gpu samples (sm%/dec%): 34/71 22/73 61/0 50/0 31/0 26/0 65/0 74/0 75/0 70/0 31/0 30/0 44/0 25/0 38/0 44/0 28/0 27/0 38/0 35/0 29/0 42/0 43/0 45/0 45/0 48/0 52/0 56/0 58/0 59/0 
+=== vod-1080p-nvdec/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=22.3s throughput=2.9 req/s
+  latency p50=20.84s p90=21.55s p95=22.08s max=22.32s min=17.18s
+  prompt_tokens avg=8502 completion_tokens avg=286.9
+  gpu samples (sm%/dec%): 38/77 64/71 51/1 47/0 47/0 44/0 40/0 70/0 63/0 31/0 39/0 33/0 40/0 35/0 40/0 38/0 44/0 42/0 51/0 46/0 47/0 61/0 
+## sequential: per-request stage cost
+=== vod-1080p-nvdec/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=80.2s throughput=0.3 req/s
+  latency p50=3.39s p90=3.80s p95=3.80s max=3.89s min=2.87s
+  prompt_tokens avg=8705 completion_tokens avg=332.3
+  gpu samples (sm%/dec%): 31/0 53/0 55/0 56/0 52/0 53/0 54/0 4/14 52/0 54/0 57/0 54/0 55/0 3/1 54/0 54/0 56/0 30/0 52/0 56/0 53/0 55/0 53/0 56/0 55/0 55/0 58/0 51/0 52/0 59/0 56/0 58/0 5
+=== vod-1080p-nvdec/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=76.8s throughput=0.3 req/s
+  latency p50=3.16s p90=4.10s p95=4.27s max=4.50s min=2.46s
+  prompt_tokens avg=8521 completion_tokens avg=325.6
+  gpu samples (sm%/dec%): 55/0 56/0 52/0 54/0 4/14 54/0 57/0 55/0 55/0 11/9 52/0 55/0 55/0 56/0 55/0 54/0 5/6 54/0 55/0 53/0 55/0 4/14 52/0 55/0 4/3 55/0 58/0 54/0 56/0 6/7 55/0 55/0 36/
+## burst rep 1, concurrency 8
+=== vod-1080p-nvdec/burst1-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=7.0s throughput=1.1 req/s
+  latency p50=6.81s p90=7.02s p95=7.02s max=7.02s min=6.52s
+  prompt_tokens avg=8556 completion_tokens avg=378.9
+  gpu samples (sm%/dec%): 32/0 41/0 48/0 45/0 45/0 56/0 56/0 
+=== vod-1080p-nvdec/burst1-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=7.1s throughput=1.1 req/s
+  latency p50=6.34s p90=7.14s p95=7.14s max=7.14s min=5.17s
+  prompt_tokens avg=8222 completion_tokens avg=360.6
+  gpu samples (sm%/dec%): 47/0 45/0 50/0 48/0 53/0 63/0 54/0 
+## burst rep 1, concurrency 64
+=== vod-1080p-nvdec/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=28.8s throughput=2.2 req/s
+  latency p50=26.95s p90=28.02s p95=28.12s max=28.74s min=21.45s
+  prompt_tokens avg=8481 completion_tokens avg=362.7
+  gpu samples (sm%/dec%): 28/72 35/67 35/0 31/0 31/0 31/0 31/0 30/0 36/0 81/0 33/0 34/0 30/0 25/0 38/0 41/0 29/0 29/0 30/0 35/0 33/0 35/0 44/0 41/0 49/0 49/0 53/0 54/0 
+=== vod-1080p-nvdec/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=22.2s throughput=2.9 req/s
+  latency p50=20.40s p90=21.02s p95=21.24s max=22.14s min=17.76s
+  prompt_tokens avg=8521 completion_tokens avg=280.3
+  gpu samples (sm%/dec%): 35/66 72/48 71/33 58/0 50/0 34/0 31/0 31/0 37/0 51/0 53/0 46/0 39/0 38/0 40/0 40/0 44/0 45/0 49/0 42/0 55/0 56/0 
+## burst rep 2, concurrency 8
+=== vod-1080p-nvdec/burst2-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=6.9s throughput=1.2 req/s
+  latency p50=6.42s p90=6.91s p95=6.91s max=6.91s min=5.81s
+  prompt_tokens avg=8518 completion_tokens avg=344.6
+  gpu samples (sm%/dec%): 70/0 49/0 47/0 52/0 54/0 56/0 
+=== vod-1080p-nvdec/burst2-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=5.5s throughput=1.5 req/s
+  latency p50=5.32s p90=5.49s p95=5.49s max=5.49s min=4.90s
+  prompt_tokens avg=8446 completion_tokens avg=287.9
+  gpu samples (sm%/dec%): 30/0 47/0 53/0 52/0 55/0 
+## burst rep 2, concurrency 64
+=== vod-1080p-nvdec/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=27.7s throughput=2.3 req/s
+  latency p50=26.20s p90=27.00s p95=27.31s max=27.67s min=23.85s
+  prompt_tokens avg=8719 completion_tokens avg=344.0
+  gpu samples (sm%/dec%): 34/71 35/66 43/5 37/0 53/0 41/0 30/0 32/0 30/0 30/0 30/0 30/0 74/0 27/0 34/0 31/0 37/0 31/0 41/0 39/0 40/0 39/0 42/0 45/0 53/0 54/0 58/0 
+=== vod-1080p-nvdec/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=25.0s throughput=2.6 req/s
+  latency p50=22.21s p90=23.99s p95=24.51s max=25.02s min=16.46s
+  prompt_tokens avg=8269 completion_tokens avg=339.4
+  gpu samples (sm%/dec%): 31/71 73/69 45/0 48/0 37/0 61/0 39/0 27/0 58/0 64/0 42/0 28/0 33/0 32/0 34/0 33/0 39/0 30/0 43/0 34/0 46/0 45/0 51/0 64/0 56/0 
+## done vod-1080p-nvdec -> /home/garam/nvdec-runs/vod-1080p-nvdec
+mps: 1 procs
+server starting (label=vod-1080p-nvdec-asc12 model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=12 seg=/home/garam/nvdec-runs/vod/clips_1080p_14s media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/vod-1080p-nvdec-asc12
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 230 clips (.mp4) of /home/garam/nvdec-runs/vod/clips_1080p_14s on :8890, 230 with .wav audio
+ready after ~140s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== vod-1080p-nvdec-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=38.0s throughput=1.7 req/s
+  latency p50=32.04s p90=32.91s p95=33.14s max=38.00s min=30.15s
+  prompt_tokens avg=8728 completion_tokens avg=356.3
+  gpu samples (sm%/dec%): 7/20 32/95 28/37 1/0 33/0 49/0 23/0 40/0 72/0 52/0 32/0 66/0 39/0 61/0 27/0 31/0 36/0 39/0 28/0 36/0 40/0 29/0 32/0 42/0 49/0 52/0 48/0 51/0 60/0 59/0 58/0 56/0
+=== vod-1080p-nvdec-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=22.5s throughput=2.9 req/s
+  latency p50=20.22s p90=21.95s p95=22.25s max=22.42s min=15.36s
+  prompt_tokens avg=8287 completion_tokens avg=338.8
+  gpu samples (sm%/dec%): 60/95 73/83 71/0 11/0 83/0 67/0 54/0 42/0 25/0 39/0 29/0 33/0 26/0 28/0 32/0 29/0 44/0 45/0 42/0 53/0 62/0 54/0 
+=== vod-1080p-nvdec-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=25.4s throughput=2.5 req/s
+  latency p50=23.82s p90=25.11s p95=25.24s max=25.35s min=21.31s
+  prompt_tokens avg=8658 completion_tokens avg=337.2
+  gpu samples (sm%/dec%): 55/96 60/94 88/0 36/0 34/0 90/0 40/0 39/0 91/0 34/0 33/0 26/0 34/0 44/0 36/0 30/0 32/0 31/0 34/0 46/0 40/0 51/0 45/0 50/0 56/0 
+=== vod-1080p-nvdec-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=19.1s throughput=3.3 req/s
+  latency p50=17.74s p90=18.50s p95=18.65s max=19.11s min=15.13s
+  prompt_tokens avg=8502 completion_tokens avg=282.0
+  gpu samples (sm%/dec%): 27/98 85/28 77/0 91/0 12/0 79/0 80/0 29/0 27/0 34/0 36/0 29/0 30/0 38/0 46/0 46/0 44/0 53/0 57/0 
+## sequential: per-request stage cost
+=== vod-1080p-nvdec-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=80.4s throughput=0.3 req/s
+  latency p50=3.41s p90=3.73s p95=3.73s max=3.85s min=2.76s
+  prompt_tokens avg=8705 completion_tokens avg=334.1
+  gpu samples (sm%/dec%): 33/0 53/0 55/0 4/14 51/0 52/0 56/0 56/0 54/0 47/0 51/0 54/0 56/0 54/0 54/0 4/14 52/0 52/0 55/0 55/0 58/0 29/0 54/0 56/0 54/0 53/0 51/0 53/0 52/0 56/0 55/0 58/0 
+=== vod-1080p-nvdec-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=81.3s throughput=0.3 req/s
+  latency p50=3.28s p90=3.96s p95=4.25s max=4.36s min=2.60s
+  prompt_tokens avg=8521 completion_tokens avg=347.1
+  gpu samples (sm%/dec%): 53/0 57/0 54/0 56/0 53/0 52/0 54/0 24/0 52/0 54/0 22/7 51/0 55/0 52/0 4/11 51/0 53/0 55/0 7/12 54/0 52/0 3/11 52/0 58/0 54/0 55/0 50/0 54/0 43/1 55/0 52/0 55/0 
+## burst rep 1, concurrency 8
+=== vod-1080p-nvdec-asc12/burst1-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=7.0s throughput=1.1 req/s
+  latency p50=6.77s p90=6.96s p95=6.96s max=6.96s min=6.20s
+  prompt_tokens avg=8556 completion_tokens avg=382.8
+  gpu samples (sm%/dec%): 26/0 30/0 46/0 46/0 50/0 57/0 57/0 
+=== vod-1080p-nvdec-asc12/burst1-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=6.1s throughput=1.3 req/s
+  latency p50=5.44s p90=6.15s p95=6.15s max=6.15s min=4.74s
+  prompt_tokens avg=8222 completion_tokens avg=335.9
+  gpu samples (sm%/dec%): 30/0 42/0 47/0 53/0 55/0 59/0 
+## burst rep 1, concurrency 64
+=== vod-1080p-nvdec-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=63 err=1 wall=26.6s throughput=2.4 req/s
+  latency p50=24.73s p90=25.92s p95=26.05s max=26.63s min=19.44s
+  prompt_tokens avg=8472 completion_tokens avg=363.5
+  ERR x1: HTTP 400 {"error":{"message":"Invalid or unsupported video file.","type":"BadRequestError","param":null,"code":400}}
+  gpu samples (sm%/dec%): 40/67 35/1 24/7 70/0 39/0 38/0 41/0 70/0 88/0 40/0 37/0 24/0 28/0 44/0 27/0 28/0 30/0 32/0 35/0 38/0 42/0 40/0 44/0 51/0 54/0 59/0 
+=== vod-1080p-nvdec-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=20.3s throughput=3.2 req/s
+  latency p50=17.57s p90=18.61s p95=18.84s max=20.30s min=14.57s
+  prompt_tokens avg=8521 completion_tokens avg=281.3
+  gpu samples (sm%/dec%): 23/25 83/16 95/14 87/9 28/0 77/0 73/0 31/0 30/0 36/0 40/0 29/0 29/0 41/0 49/0 46/0 46/0 50/0 60/0 54/0 
+## burst rep 2, concurrency 8
+=== vod-1080p-nvdec-asc12/burst2-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=6.7s throughput=1.2 req/s
+  latency p50=5.91s p90=6.65s p95=6.65s max=6.65s min=5.48s
+  prompt_tokens avg=8518 completion_tokens avg=335.9
+  gpu samples (sm%/dec%): 72/0 53/0 52/0 55/0 61/0 
+=== vod-1080p-nvdec-asc12/burst2-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=6.3s throughput=1.3 req/s
+  latency p50=5.20s p90=6.28s p95=6.28s max=6.28s min=4.68s
+  prompt_tokens avg=8446 completion_tokens avg=308.9
+  gpu samples (sm%/dec%): 26/0 49/0 46/0 55/0 59/0 55/0 
+## burst rep 2, concurrency 64
+=== vod-1080p-nvdec-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=29.7s throughput=2.2 req/s
+  latency p50=24.07s p90=24.85s p95=25.23s max=29.67s min=21.63s
+  prompt_tokens avg=8719 completion_tokens avg=351.0
+  gpu samples (sm%/dec%): 39/56 31/0 38/0 83/0 35/0 40/0 91/0 39/0 38/0 91/0 11/0 17/0 41/0 33/0 29/0 32/0 29/0 30/0 31/0 43/0 41/0 56/0 52/0 52/0 51/0 55/0 57/0 60/0 60/0 
+=== vod-1080p-nvdec-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=21.7s throughput=2.9 req/s
+  latency p50=19.97s p90=21.31s p95=21.59s max=21.71s min=16.17s
+  prompt_tokens avg=8269 completion_tokens avg=344.0
+  gpu samples (sm%/dec%): 30/53 94/15 17/7 96/12 73/0 59/0 90/0 27/0 32/0 44/0 34/0 39/0 38/0 31/0 40/0 32/0 44/0 45/0 46/0 52/0 55/0 8/0 
+## done vod-1080p-nvdec-asc12 -> /home/garam/nvdec-runs/vod-1080p-nvdec-asc12
+server starting (label=vod-360p-prod model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=3 seg=/home/garam/nvdec-runs/vod/clips_360p_14s media-io={"video":{"backend":"opencv"}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/vod-360p-prod
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 230 clips (.mp4) of /home/garam/nvdec-runs/vod/clips_360p_14s on :8890, 230 with .wav audio
+ready after ~140s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== vod-360p-prod/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=28.1s throughput=2.3 req/s
+  latency p50=24.91s p90=25.56s p95=25.93s max=28.14s min=23.10s
+  prompt_tokens avg=7537 completion_tokens avg=341.2
+  gpu samples (sm%/dec%): 15/0 31/0 26/0 18/0 35/0 29/0 3/0 31/0 92/0 20/0 24/0 36/0 38/0 25/0 27/0 25/0 32/0 38/0 43/0 43/0 52/0 52/0 55/0 52/0 53/0 
+=== vod-360p-prod/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=18.9s throughput=3.4 req/s
+  latency p50=16.51s p90=18.01s p95=18.41s max=18.92s min=12.69s
+  prompt_tokens avg=7164 completion_tokens avg=315.8
+  gpu samples (sm%/dec%): 18/0 85/0 78/0 20/0 83/0 25/0 28/0 39/0 28/0 27/0 41/0 38/0 43/0 30/0 43/0 49/0 54/0 58/0 52/0 
+=== vod-360p-prod/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=22.3s throughput=2.9 req/s
+  latency p50=20.75s p90=21.99s p95=22.17s max=22.31s min=17.66s
+  prompt_tokens avg=7486 completion_tokens avg=321.6
+  gpu samples (sm%/dec%): 19/0 18/0 35/0 81/0 25/0 25/0 91/0 33/0 26/0 25/0 37/0 35/0 29/0 28/0 36/0 41/0 30/0 43/0 41/0 53/0 51/0 55/0 
+=== vod-360p-prod/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=16.3s throughput=3.9 req/s
+  latency p50=15.05s p90=15.85s p95=16.01s max=16.26s min=12.78s
+  prompt_tokens avg=7322 completion_tokens avg=273.1
+  gpu samples (sm%/dec%): 48/0 41/0 77/0 73/0 78/0 27/0 15/0 32/0 35/0 39/0 40/0 40/0 46/0 43/0 53/0 54/0 
+## sequential: per-request stage cost
+=== vod-360p-prod/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=65.2s throughput=0.4 req/s
+  latency p50=2.78s p90=3.07s p95=3.08s max=3.23s min=2.23s
+  prompt_tokens avg=7520 completion_tokens avg=321.0
+  gpu samples (sm%/dec%): 48/0 48/0 55/0 34/0 49/0 55/0 52/0 53/0 54/0 54/0 52/0 18/0 53/0 51/0 53/0 54/0 53/0 54/0 51/0 54/0 51/0 53/0 54/0 55/0 35/0 52/0 54/0 54/0 54/0 55/0 50/0 50/0 
+=== vod-360p-prod/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=61.5s throughput=0.4 req/s
+  latency p50=2.46s p90=3.13s p95=3.50s max=3.86s min=1.93s
+  prompt_tokens avg=7336 completion_tokens avg=306.7
+  gpu samples (sm%/dec%): 49/0 54/0 35/0 51/0 52/0 17/0 53/0 54/0 50/0 52/0 53/0 54/0 52/0 51/0 47/0 53/0 54/0 54/0 54/0 51/0 52/0 52/0 54/0 50/0 53/0 52/0 52/0 57/0 19/0 52/0 36/0 55/0 
+## burst rep 1, concurrency 8
+=== vod-360p-prod/burst1-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=7.1s throughput=1.1 req/s
+  latency p50=6.06s p90=7.10s p95=7.10s max=7.10s min=5.21s
+  prompt_tokens avg=7410 completion_tokens avg=402.0
+  gpu samples (sm%/dec%): 43/0 43/0 45/0 48/0 52/0 54/0 57/0 
+=== vod-360p-prod/burst1-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=5.1s throughput=1.6 req/s
+  latency p50=4.55s p90=5.13s p95=5.13s max=5.13s min=4.07s
+  prompt_tokens avg=7116 completion_tokens avg=310.6
+  gpu samples (sm%/dec%): 52/0 50/0 49/0 60/0 54/0 
+## burst rep 1, concurrency 64
+=== vod-360p-prod/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=22.7s throughput=2.8 req/s
+  latency p50=21.18s p90=22.41s p95=22.47s max=22.68s min=18.06s
+  prompt_tokens avg=7355 completion_tokens avg=334.5
+  gpu samples (sm%/dec%): 22/0 31/0 30/0 31/0 28/0 38/0 37/0 50/0 22/0 28/0 38/0 25/0 26/0 26/0 31/0 38/0 34/0 45/0 43/0 49/0 53/0 
+=== vod-360p-prod/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=16.8s throughput=3.8 req/s
+  latency p50=14.59s p90=15.58s p95=16.02s max=16.81s min=11.99s
+  prompt_tokens avg=7336 completion_tokens avg=271.5
+  gpu samples (sm%/dec%): 42/0 74/0 42/0 75/0 34/0 22/0 23/0 36/0 31/0 30/0 29/0 50/0 43/0 45/0 53/0 55/0 
+## burst rep 2, concurrency 8
+=== vod-360p-prod/burst2-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=5.7s throughput=1.4 req/s
+  latency p50=5.29s p90=5.69s p95=5.69s max=5.69s min=4.77s
+  prompt_tokens avg=7382 completion_tokens avg=327.9
+  gpu samples (sm%/dec%): 22/0 42/0 45/0 46/0 58/0 23/0 
+=== vod-360p-prod/burst2-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=4.4s throughput=1.8 req/s
+  latency p50=4.11s p90=4.35s p95=4.35s max=4.35s min=3.84s
+  prompt_tokens avg=7281 completion_tokens avg=253.0
+  gpu samples (sm%/dec%): 48/0 51/0 50/0 53/0 
+## burst rep 2, concurrency 64
+=== vod-360p-prod/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=22.4s throughput=2.9 req/s
+  latency p50=21.24s p90=22.13s p95=22.23s max=22.39s min=18.77s
+  prompt_tokens avg=7530 completion_tokens avg=332.5
+  gpu samples (sm%/dec%): 21/0 20/0 13/0 82/0 55/0 28/0 92/0 12/0 69/0 26/0 28/0 30/0 27/0 32/0 28/0 29/0 38/0 31/0 41/0 50/0 54/0 56/0 
+=== vod-360p-prod/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=17.8s throughput=3.6 req/s
+  latency p50=15.96s p90=17.02s p95=17.48s max=17.79s min=12.84s
+  prompt_tokens avg=7150 completion_tokens avg=306.2
+  gpu samples (sm%/dec%): 53/0 43/0 80/0 78/0 78/0 19/0 31/0 40/0 28/0 32/0 31/0 37/0 40/0 45/0 41/0 50/0 55/0 
+## done vod-360p-prod -> /home/garam/nvdec-runs/vod-360p-prod
+mps: 1 procs
+server starting (label=vod-360p-nvdec model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=3 seg=/home/garam/nvdec-runs/vod/clips_360p_14s media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/vod-360p-nvdec
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 230 clips (.mp4) of /home/garam/nvdec-runs/vod/clips_360p_14s on :8890, 230 with .wav audio
+ready after ~130s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== vod-360p-nvdec/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=31.7s throughput=2.0 req/s
+  latency p50=26.21s p90=27.12s p95=27.40s max=31.72s min=24.28s
+  prompt_tokens avg=7537 completion_tokens avg=352.0
+  gpu samples (sm%/dec%): 39/48 27/0 90/0 25/0 90/0 33/0 25/0 9/0 32/0 22/0 20/0 36/0 29/0 27/0 26/0 27/0 30/0 28/0 40/0 47/0 49/0 48/0 52/0 61/0 58/0 58/0 55/0 
+=== vod-360p-nvdec/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=19.1s throughput=3.4 req/s
+  latency p50=16.21s p90=17.94s p95=18.44s max=19.09s min=12.73s
+  prompt_tokens avg=7164 completion_tokens avg=314.2
+  gpu samples (sm%/dec%): 77/47 27/0 31/0 85/0 84/0 24/0 28/0 37/0 33/0 32/0 31/0 29/0 33/0 37/0 43/0 46/0 53/0 53/0 55/0 
+=== vod-360p-nvdec/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=23.7s throughput=2.7 req/s
+  latency p50=21.37s p90=22.92s p95=23.12s max=23.66s min=17.86s
+  prompt_tokens avg=7486 completion_tokens avg=331.1
+  gpu samples (sm%/dec%): 41/24 73/0 85/0 43/0 86/0 25/0 31/0 89/0 57/0 24/0 40/0 31/0 29/0 31/0 38/0 38/0 32/0 41/0 46/0 44/0 49/0 54/0 54/0 
+=== vod-360p-nvdec/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=15.9s throughput=4.0 req/s
+  latency p50=14.67s p90=15.53s p95=15.62s max=15.86s min=12.66s
+  prompt_tokens avg=7322 completion_tokens avg=270.0
+  gpu samples (sm%/dec%): 83/29 74/0 35/0 57/0 82/0 24/0 26/0 40/0 37/0 26/0 40/0 44/0 49/0 43/0 48/0 42/0 
+## sequential: per-request stage cost
+=== vod-360p-nvdec/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=67.3s throughput=0.4 req/s
+  latency p50=2.80s p90=3.12s p95=3.13s max=3.46s min=2.35s
+  prompt_tokens avg=7520 completion_tokens avg=327.0
+  gpu samples (sm%/dec%): 53/0 53/0 57/0 54/0 55/0 25/0 54/0 59/0 52/0 52/0 59/0 53/0 53/0 55/0 51/0 55/0 56/0 54/0 58/0 31/0 54/0 55/0 56/0 54/0 55/0 55/0 55/0 54/0 55/0 54/0 55/0 56/0 
+=== vod-360p-nvdec/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=63.2s throughput=0.4 req/s
+  latency p50=2.53s p90=3.51s p95=3.63s max=4.11s min=2.02s
+  prompt_tokens avg=7336 completion_tokens avg=312.3
+  gpu samples (sm%/dec%): 55/0 55/0 12/0 54/0 55/0 3/3 54/0 58/0 55/0 54/0 55/0 6/6 57/0 57/0 55/0 59/0 45/0 58/0 28/0 56/0 24/6 54/0 58/0 52/0 58/0 55/0 57/0 53/0 54/0 58/0 57/0 59/0 54
+## burst rep 1, concurrency 8
+=== vod-360p-nvdec/burst1-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=6.2s throughput=1.3 req/s
+  latency p50=6.08s p90=6.23s p95=6.23s max=6.23s min=5.67s
+  prompt_tokens avg=7410 completion_tokens avg=381.0
+  gpu samples (sm%/dec%): 30/0 42/0 46/0 47/0 54/0 53/0 
+=== vod-360p-nvdec/burst1-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=5.5s throughput=1.5 req/s
+  latency p50=4.39s p90=5.49s p95=5.49s max=5.49s min=3.84s
+  prompt_tokens avg=7116 completion_tokens avg=296.4
+  gpu samples (sm%/dec%): 67/0 50/0 51/0 60/0 60/0 
+## burst rep 1, concurrency 64
+=== vod-360p-nvdec/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=23.1s throughput=2.8 req/s
+  latency p50=21.54s p90=22.70s p95=23.03s max=23.06s min=17.68s
+  prompt_tokens avg=7355 completion_tokens avg=336.0
+  gpu samples (sm%/dec%): 37/42 22/0 25/0 36/0 30/0 25/0 91/0 26/0 30/0 26/0 38/0 37/0 36/0 25/0 27/0 30/0 31/0 38/0 40/0 48/0 48/0 56/0 55/0 
+=== vod-360p-nvdec/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=17.6s throughput=3.6 req/s
+  latency p50=14.52s p90=15.72s p95=16.23s max=17.64s min=11.75s
+  prompt_tokens avg=7336 completion_tokens avg=275.0
+  gpu samples (sm%/dec%): 73/50 69/0 74/0 37/0 81/0 22/0 23/0 40/0 30/0 34/0 40/0 45/0 50/0 48/0 47/0 56/0 55/0 
+## burst rep 2, concurrency 8
+=== vod-360p-nvdec/burst2-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=5.5s throughput=1.4 req/s
+  latency p50=5.28s p90=5.52s p95=5.52s max=5.52s min=4.70s
+  prompt_tokens avg=7382 completion_tokens avg=315.4
+  gpu samples (sm%/dec%): 41/0 42/0 51/0 56/0 56/0 
+=== vod-360p-nvdec/burst2-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=4.6s throughput=1.7 req/s
+  latency p50=4.19s p90=4.63s p95=4.63s max=4.63s min=3.54s
+  prompt_tokens avg=7281 completion_tokens avg=259.4
+  gpu samples (sm%/dec%): 54/0 50/0 53/0 59/0 
+## burst rep 2, concurrency 64
+=== vod-360p-nvdec/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=23.0s throughput=2.8 req/s
+  latency p50=21.60s p90=22.52s p95=22.61s max=22.96s min=19.27s
+  prompt_tokens avg=7530 completion_tokens avg=335.2
+  gpu samples (sm%/dec%): 45/58 32/0 81/0 83/0 59/0 28/0 34/0 90/0 24/0 28/0 24/0 31/0 37/0 29/0 28/0 40/0 42/0 31/0 34/0 51/0 52/0 51/0 7/0 
+=== vod-360p-nvdec/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=18.0s throughput=3.6 req/s
+  latency p50=16.19s p90=17.69s p95=17.76s max=17.99s min=12.75s
+  prompt_tokens avg=7150 completion_tokens avg=314.6
+  gpu samples (sm%/dec%): 68/40 72/0 43/0 79/0 80/0 22/0 28/0 30/0 28/0 28/0 27/0 34/0 43/0 46/0 42/0 52/0 60/0 58/0 
+## done vod-360p-nvdec -> /home/garam/nvdec-runs/vod-360p-nvdec
+mps: 1 procs
+server starting (label=vod-360p-nvdec-asc12 model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=12 seg=/home/garam/nvdec-runs/vod/clips_360p_14s media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/vod-360p-nvdec-asc12
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 230 clips (.mp4) of /home/garam/nvdec-runs/vod/clips_360p_14s on :8890, 230 with .wav audio
+ready after ~140s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== vod-360p-nvdec-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=32.3s throughput=2.0 req/s
+  latency p50=28.96s p90=29.93s p95=29.97s max=32.26s min=26.83s
+  prompt_tokens avg=7537 completion_tokens avg=343.1
+  gpu samples (sm%/dec%): 31/35 2/0 83/0 87/0 24/0 18/0 34/0 91/0 32/0 92/0 23/0 30/0 29/0 37/0 25/0 32/0 40/0 26/0 37/0 39/0 47/0 46/0 50/0 57/0 55/0 56/0 
+=== vod-360p-nvdec-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=18.8s throughput=3.4 req/s
+  latency p50=16.25s p90=17.39s p95=17.72s max=18.80s min=12.89s
+  prompt_tokens avg=7164 completion_tokens avg=307.3
+  gpu samples (sm%/dec%): 16/0 70/0 81/0 81/0 83/0 22/0 24/0 38/0 25/0 32/0 38/0 31/0 33/0 42/0 45/0 49/0 57/0 60/0 34/0 
+=== vod-360p-nvdec-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=25.5s throughput=2.5 req/s
+  latency p50=20.55s p90=21.92s p95=22.21s max=25.45s min=17.30s
+  prompt_tokens avg=7486 completion_tokens avg=340.8
+  gpu samples (sm%/dec%): 25/0 64/0 28/0 32/0 42/0 37/0 91/0 26/0 22/0 23/0 32/0 37/0 36/0 27/0 26/0 41/0 39/0 49/0 43/0 49/0 59/0 56/0 56/0 61/0 57/0 
+=== vod-360p-nvdec-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=16.1s throughput=4.0 req/s
+  latency p50=14.67s p90=15.44s p95=15.52s max=16.09s min=12.59s
+  prompt_tokens avg=7322 completion_tokens avg=274.0
+  gpu samples (sm%/dec%): 64/0 71/0 91/0 86/0 91/0 25/0 40/0 42/0 26/0 30/0 30/0 40/0 52/0 46/0 55/0 59/0 
+## sequential: per-request stage cost
+=== vod-360p-nvdec-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=66.8s throughput=0.4 req/s
+  latency p50=2.80s p90=3.05s p95=3.06s max=3.29s min=2.23s
+  prompt_tokens avg=7520 completion_tokens avg=325.4
+  gpu samples (sm%/dec%): 55/0 55/0 57/0 51/0 53/0 59/0 50/0 53/0 58/0 55/0 55/0 55/0 55/0 55/0 45/2 57/0 55/0 5/6 55/0 58/0 52/0 55/0 55/0 55/0 55/0 4/4 52/0 55/0 29/0 55/0 55/0 54/0 53
+=== vod-360p-nvdec-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=66.6s throughput=0.4 req/s
+  latency p50=2.59s p90=3.60s p95=3.81s max=4.34s min=2.08s
+  prompt_tokens avg=7336 completion_tokens avg=332.3
+  gpu samples (sm%/dec%): 54/0 53/0 54/0 55/0 54/0 56/0 51/0 55/0 58/0 49/0 53/0 54/0 54/0 51/0 56/0 54/0 54/0 32/6 57/0 58/0 49/0 59/0 44/0 55/0 3/4 54/0 59/0 50/0 53/0 56/0 55/0 55/0 6
+## burst rep 1, concurrency 8
+=== vod-360p-nvdec-asc12/burst1-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=7.3s throughput=1.1 req/s
+  latency p50=6.33s p90=7.30s p95=7.30s max=7.30s min=5.09s
+  prompt_tokens avg=7410 completion_tokens avg=386.5
+  gpu samples (sm%/dec%): 27/0 42/0 47/0 47/0 53/0 53/0 58/0 
+=== vod-360p-nvdec-asc12/burst1-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=5.6s throughput=1.4 req/s
+  latency p50=4.29s p90=5.57s p95=5.57s max=5.57s min=3.55s
+  prompt_tokens avg=7116 completion_tokens avg=300.8
+  gpu samples (sm%/dec%): 56/0 49/0 55/0 56/0 57/0 
+## burst rep 1, concurrency 64
+=== vod-360p-nvdec-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=22.7s throughput=2.8 req/s
+  latency p50=20.96s p90=22.06s p95=22.15s max=22.65s min=17.53s
+  prompt_tokens avg=7355 completion_tokens avg=338.6
+  gpu samples (sm%/dec%): 22/0 28/0 35/0 27/0 91/0 26/0 26/0 10/0 30/0 25/0 33/0 26/0 26/0 35/0 27/0 27/0 30/0 40/0 50/0 45/0 54/0 59/0 
+=== vod-360p-nvdec-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=16.3s throughput=3.9 req/s
+  latency p50=14.29s p90=15.63s p95=15.83s max=16.25s min=11.40s
+  prompt_tokens avg=7336 completion_tokens avg=272.9
+  gpu samples (sm%/dec%): 68/0 54/0 91/0 90/0 90/0 22/0 30/0 37/0 27/0 38/0 35/0 43/0 45/0 47/0 53/0 61/0 
+## burst rep 2, concurrency 8
+=== vod-360p-nvdec-asc12/burst2-c8-av mode=http N=8 concurrency=8 audio=True ===
+  ok=8 err=0 wall=5.4s throughput=1.5 req/s
+  latency p50=5.24s p90=5.44s p95=5.44s max=5.44s min=4.70s
+  prompt_tokens avg=7382 completion_tokens avg=317.8
+  gpu samples (sm%/dec%): 30/0 42/0 46/0 54/0 52/0 
+=== vod-360p-nvdec-asc12/burst2-c8-v mode=http N=8 concurrency=8 audio=False ===
+  ok=8 err=0 wall=4.6s throughput=1.7 req/s
+  latency p50=4.29s p90=4.61s p95=4.61s max=4.61s min=3.62s
+  prompt_tokens avg=7281 completion_tokens avg=275.8
+  gpu samples (sm%/dec%): 56/0 55/0 49/0 59/0 
+## burst rep 2, concurrency 64
+=== vod-360p-nvdec-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=24.2s throughput=2.6 req/s
+  latency p50=20.92s p90=21.79s p95=21.87s max=24.23s min=18.69s
+  prompt_tokens avg=7530 completion_tokens avg=340.3
+  gpu samples (sm%/dec%): 38/0 83/0 24/0 70/0 34/0 36/0 89/0 27/0 34/0 24/0 37/0 35/0 35/0 27/0 34/0 30/0 30/0 40/0 43/0 44/0 52/0 56/0 55/0 55/0 
+=== vod-360p-nvdec-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=18.2s throughput=3.5 req/s
+  latency p50=16.12s p90=17.43s p95=17.52s max=18.22s min=11.30s
+  prompt_tokens avg=7150 completion_tokens avg=315.2
+  gpu samples (sm%/dec%): 77/0 61/0 91/0 86/0 66/0 24/0 42/0 28/0 29/0 29/0 29/0 43/0 41/0 41/0 53/0 56/0 55/0 55/0 
+## done vod-360p-nvdec-asc12 -> /home/garam/nvdec-runs/vod-360p-nvdec-asc12
+CHAIN_VOD_DONE
+
+--- data generation
+#!/usr/bin/env bash
+# VOD test data: the same 55 min of genuine 1080p sports broadcast as two "uploaded originals" (1080p and 360p,
+# 29.97 fps H.264 High, GOP 2 s, AAC 48 kHz stereo, faststart), then production-style 14 s scene clips (p90 of
+# 37,517 production scenes) cut from each original with ffmpeg stream copy (worker-scene-extract COPY_ARGS) plus
+# 16 kHz mono WAV audio (extract_audio). 230 clips per resolution, same time offsets for both.
+set -euo pipefail
+FF=~/miniconda3/envs/ffmpeg/bin/ffmpeg
+SRC=/gpfs/public/datasets/2026-worldcup-full-match/ARG_vs_ALG_groupJ_match1.mp4
+OUT=~/nvdec-runs/vod; cd $OUT
+enc() { # res scale vbitrate maxrate bufsize
+  $FF -hide_banner -loglevel warning -stats -ss 00:10:00 -t 3300 -i $SRC \
+    -vf "fps=30000/1001,$2,format=yuv420p" -c:v libx264 -preset faster -profile:v high -b:v $3 -maxrate $4 -bufsize $5 \
+    -g 60 -keyint_min 60 -sc_threshold 0 -c:a aac -ar 48000 -ac 2 -b:a 128k -movflags +faststart -y orig_$1.mp4
+}
+enc 1080p "scale=1920:1080" 4500k 5000k 9000k
+enc 360p  "scale=640:360"   600k  700k  1400k
+for res in 1080p 360p; do
+  d=clips_${res}_14s; mkdir -p $d
+  for i in $(seq 0 229); do
+    start=$(( i * 14 ))
+    $FF -hide_banner -loglevel error -y -ss $start -i orig_$res.mp4 -t 14 -c copy -avoid_negative_ts make_zero $d/clip_$(printf %04d $i).mp4
+    $FF -hide_banner -loglevel error -y -ss $start -i orig_$res.mp4 -t 14 -vn -ac 1 -ar 16000 -acodec pcm_s16le $d/clip_$(printf %04d $i).wav
+  done
+  echo "done $d: $(ls $d/*.mp4 | wc -l) clips, $(du -sh $d | cut -f1)"
+done
+echo VOD_DATA_DONE
+done clips_1080p_14s: 230 clips, 2.0G
+done clips_360p_14s: 230 clips, 409M
+VOD_DATA_DONE
