@@ -1,0 +1,424 @@
+mps: 1 procs
+server starting (label=qwen1080-nvdec-asc12 model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=12 seg=/home/garam/nvdec-runs/segments-1080p media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/qwen-live1080-nvdec-asc12
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 800 copies of /home/garam/nvdec-runs/segments-1080p on :8890
+ready after ~170s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== qwen1080-nvdec-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=34.3s throughput=1.9 req/s
+  latency p50=29.52s p90=29.55s p95=29.60s max=34.28s min=27.28s
+  prompt_tokens avg=5911 completion_tokens avg=285.7
+  gpu samples (sm%/dec%): 1/0 34/86 2/1 1/0 26/0 27/0 26/0 21/0 26/0 21/0 25/0 20/0 23/0 32/0 37/0 23/0 37/0 38/0 40/0 51/0 50/0 57/0 56/0 
+=== qwen1080-nvdec-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=18.4s throughput=3.5 req/s
+  latency p50=14.26s p90=15.18s p95=15.51s max=18.32s min=10.91s
+  prompt_tokens avg=5830 completion_tokens avg=270.2
+  gpu samples (sm%/dec%): 24/83 77/0 45/0 94/0 20/0 25/0 36/0 31/0 32/0 29/0 39/0 42/0 49/0 53/0 60/0 56/0 52/0 
+=== qwen1080-nvdec-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=21.4s throughput=3.0 req/s
+  latency p50=16.97s p90=20.11s p95=20.12s max=21.37s min=13.99s
+  prompt_tokens avg=5911 completion_tokens avg=294.8
+  gpu samples (sm%/dec%): 42/96 17/0 27/0 61/0 25/0 19/0 31/0 23/0 32/0 32/0 35/0 36/0 37/0 40/0 44/0 40/0 50/0 58/0 57/0 55/0 16/0 
+=== qwen1080-nvdec-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=14.4s throughput=4.4 req/s
+  latency p50=12.73s p90=13.53s p95=13.79s max=14.39s min=9.38s
+  prompt_tokens avg=5830 completion_tokens avg=280.1
+  gpu samples (sm%/dec%): 41/99 81/0 93/0 28/0 22/0 38/0 38/0 34/0 36/0 31/0 45/0 42/0 50/0 56/0 57/0 
+## sequential: per-request stage cost
+=== qwen1080-nvdec-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=66.7s throughput=0.4 req/s
+  latency p50=2.80s p90=3.39s p95=3.48s max=4.82s min=1.54s
+  prompt_tokens avg=5911 completion_tokens avg=313.5
+  gpu samples (sm%/dec%): 54/0 57/0 54/0 54/0 57/0 54/0 59/0 27/0 55/0 57/0 55/0 58/0 28/0 54/0 43/0 54/0 54/0 58/0 56/0 54/0 54/0 54/0 3/9 53/0 54/0 59/0 12/0 54/0 54/0 54/0 54/0 13/6 5
+=== qwen1080-nvdec-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=64.6s throughput=0.4 req/s
+  latency p50=2.71s p90=3.07s p95=3.16s max=3.16s min=2.26s
+  prompt_tokens avg=5830 completion_tokens avg=319.9
+  gpu samples (sm%/dec%): 53/0 57/0 5/0 54/0 54/0 54/0 54/0 51/0 53/0 4/10 55/0 54/0 29/0 55/0 43/0 54/0 56/0 54/0 54/0 39/0 57/0 53/0 3/6 55/0 57/0 53/0 54/0 3/6 55/0 57/0 8/0 54/0 58/0
+## burst rep 1
+=== qwen1080-nvdec-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=20.0s throughput=3.2 req/s
+  latency p50=16.14s p90=17.31s p95=17.46s max=19.94s min=14.66s
+  prompt_tokens avg=5911 completion_tokens avg=283.3
+  gpu samples (sm%/dec%): 44/57 76/0 19/0 23/0 23/0 24/0 75/0 22/0 32/0 36/0 31/0 25/0 31/0 47/0 44/0 49/0 50/0 57/0 54/0 56/0 
+=== qwen1080-nvdec-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=15.1s throughput=4.2 req/s
+  latency p50=11.74s p90=13.60s p95=14.36s max=15.13s min=9.07s
+  prompt_tokens avg=5830 completion_tokens avg=272.4
+  gpu samples (sm%/dec%): 83/76 57/0 87/0 28/0 32/0 39/0 34/0 35/0 34/0 41/0 43/0 45/0 60/0 56/0 58/0 
+## burst rep 2
+=== qwen1080-nvdec-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=21.8s throughput=2.9 req/s
+  latency p50=16.08s p90=16.66s p95=20.23s max=21.83s min=13.69s
+  prompt_tokens avg=5911 completion_tokens avg=296.2
+  gpu samples (sm%/dec%): 30/23 79/0 23/0 20/0 21/0 20/0 90/0 20/0 34/0 33/0 27/0 23/0 35/0 53/0 46/0 50/0 55/0 59/0 58/0 58/0 58/0 
+=== qwen1080-nvdec-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=12.8s throughput=5.0 req/s
+  latency p50=11.93s p90=12.47s p95=12.55s max=12.80s min=10.12s
+  prompt_tokens avg=5830 completion_tokens avg=256.2
+  gpu samples (sm%/dec%): 73/11 85/0 90/0 18/0 26/0 30/0 35/0 37/0 38/0 42/0 48/0 47/0 
+## burst rep 3
+=== qwen1080-nvdec-asc12/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=20.8s throughput=3.1 req/s
+  latency p50=16.44s p90=16.92s p95=16.97s max=20.73s min=14.07s
+  prompt_tokens avg=5911 completion_tokens avg=282.0
+  gpu samples (sm%/dec%): 42/61 75/0 25/0 21/0 24/0 19/0 90/0 21/0 34/0 34/0 23/0 34/0 26/0 41/0 50/0 45/0 59/0 53/0 55/0 54/0 27/0 
+=== qwen1080-nvdec-asc12/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=13.5s throughput=4.7 req/s
+  latency p50=11.98s p90=12.72s p95=13.08s max=13.46s min=8.98s
+  prompt_tokens avg=5830 completion_tokens avg=261.8
+  gpu samples (sm%/dec%): 83/84 56/0 89/0 22/0 34/0 37/0 23/0 37/0 39/0 49/0 48/0 41/0 61/0 
+## done qwen1080-nvdec-asc12 -> /home/garam/nvdec-runs/qwen-live1080-nvdec-asc12
+server starting (label=qwen1080-cpu-asc12 model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=12 seg=/home/garam/nvdec-runs/segments-1080p media-io={"video":{"backend":"opencv"}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/qwen-live1080-cpu-asc12
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 800 copies of /home/garam/nvdec-runs/segments-1080p on :8890
+ready after ~150s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== qwen1080-cpu-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=27.7s throughput=2.3 req/s
+  latency p50=22.00s p90=23.17s p95=25.64s max=27.72s min=19.92s
+  prompt_tokens avg=5911 completion_tokens avg=310.9
+  gpu samples (sm%/dec%): 13/0 18/0 24/0 19/0 23/0 62/0 13/0 18/0 22/0 32/0 31/0 35/0 27/0 33/0 33/0 42/0 43/0 45/0 59/0 53/0 54/0 58/0 58/0 
+=== qwen1080-cpu-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=16.1s throughput=4.0 req/s
+  latency p50=14.03s p90=15.13s p95=15.26s max=16.03s min=11.41s
+  prompt_tokens avg=5830 completion_tokens avg=265.7
+  gpu samples (sm%/dec%): 1/0 77/0 89/0 23/0 34/0 34/0 29/0 29/0 35/0 42/0 42/0 50/0 51/0 50/0 
+=== qwen1080-cpu-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=25.0s throughput=2.6 req/s
+  latency p50=18.44s p90=20.52s p95=21.19s max=24.99s min=15.16s
+  prompt_tokens avg=5911 completion_tokens avg=315.1
+  gpu samples (sm%/dec%): 15/0 72/0 24/0 20/0 16/0 23/0 90/0 20/0 32/0 36/0 24/0 23/0 24/0 35/0 36/0 47/0 45/0 44/0 58/0 54/0 51/0 55/0 50/0 52/0 
+=== qwen1080-cpu-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=17.9s throughput=3.6 req/s
+  latency p50=14.57s p90=15.60s p95=16.00s max=17.89s min=10.82s
+  prompt_tokens avg=5830 completion_tokens avg=292.6
+  gpu samples (sm%/dec%): 72/0 51/0 91/0 20/0 22/0 37/0 27/0 32/0 30/0 35/0 36/0 45/0 44/0 50/0 60/0 50/0 53/0 
+## sequential: per-request stage cost
+=== qwen1080-cpu-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=66.6s throughput=0.4 req/s
+  latency p50=2.76s p90=3.19s p95=3.21s max=5.63s min=1.49s
+  prompt_tokens avg=5911 completion_tokens avg=317.5
+  gpu samples (sm%/dec%): 52/0 6/0 56/0 35/0 50/0 51/0 53/0 47/0 49/0 49/0 52/0 51/0 55/0 23/0 52/0 52/0 50/0 53/0 52/0 51/0 52/0 50/0 55/0 37/0 52/0 52/0 50/0 49/0 50/0 47/0 49/0 49/0 4
+=== qwen1080-cpu-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=67.7s throughput=0.4 req/s
+  latency p50=2.76s p90=3.14s p95=3.76s max=3.87s min=2.19s
+  prompt_tokens avg=5830 completion_tokens avg=329.2
+  gpu samples (sm%/dec%): 45/0 47/0 32/0 52/0 49/0 49/0 53/0 44/0 46/0 49/0 46/0 49/0 50/0 46/0 49/0 53/0 50/0 46/0 49/0 50/0 49/0 50/0 48/0 53/0 49/0 46/0 50/0 53/0 39/0 50/0 53/0 51/0 
+## burst rep 1
+=== qwen1080-cpu-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=19.4s throughput=3.3 req/s
+  latency p50=17.50s p90=18.65s p95=18.84s max=19.36s min=15.89s
+  prompt_tokens avg=5911 completion_tokens avg=280.3
+  gpu samples (sm%/dec%): 18/0 18/0 85/0 77/0 22/0 18/0 85/0 17/0 25/0 36/0 28/0 34/0 34/0 36/0 42/0 42/0 55/0 62/0 
+=== qwen1080-cpu-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=17.8s throughput=3.6 req/s
+  latency p50=13.16s p90=14.80s p95=15.09s max=17.75s min=10.43s
+  prompt_tokens avg=5830 completion_tokens avg=274.0
+  gpu samples (sm%/dec%): 14/0 79/0 92/0 20/0 28/0 30/0 26/0 32/0 39/0 35/0 40/0 40/0 45/0 53/0 58/0 49/0 52/0 
+## burst rep 2
+=== qwen1080-cpu-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=24.2s throughput=2.6 req/s
+  latency p50=18.18s p90=18.91s p95=22.39s max=24.20s min=16.32s
+  prompt_tokens avg=5911 completion_tokens avg=303.0
+  gpu samples (sm%/dec%): 14/0 21/0 84/0 69/0 19/0 22/0 24/0 23/0 20/0 37/0 30/0 23/0 24/0 26/0 47/0 41/0 44/0 54/0 54/0 56/0 56/0 54/0 53/0 
+=== qwen1080-cpu-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=13.8s throughput=4.6 req/s
+  latency p50=13.05s p90=13.49s p95=13.56s max=13.75s min=11.12s
+  prompt_tokens avg=5830 completion_tokens avg=252.7
+  gpu samples (sm%/dec%): 58/0 75/0 41/0 17/0 24/0 36/0 31/0 23/0 34/0 41/0 35/0 46/0 21/0 
+## burst rep 3
+=== qwen1080-cpu-asc12/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=23.8s throughput=2.7 req/s
+  latency p50=18.33s p90=19.12s p95=19.61s max=23.73s min=15.61s
+  prompt_tokens avg=5911 completion_tokens avg=299.2
+  gpu samples (sm%/dec%): 17/0 17/0 20/0 62/0 18/0 25/0 20/0 19/0 20/0 33/0 34/0 32/0 32/0 24/0 43/0 41/0 46/0 54/0 53/0 57/0 60/0 57/0 
+=== qwen1080-cpu-asc12/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=17.0s throughput=3.8 req/s
+  latency p50=13.27s p90=14.34s p95=14.66s max=16.99s min=10.36s
+  prompt_tokens avg=5830 completion_tokens avg=268.9
+  gpu samples (sm%/dec%): 9/0 76/0 42/0 20/0 34/0 34/0 22/0 26/0 34/0 35/0 44/0 42/0 53/0 55/0 51/0 53/0 
+## done qwen1080-cpu-asc12 -> /home/garam/nvdec-runs/qwen-live1080-cpu-asc12
+mps: 1 procs
+server starting (label=qwen1080-nvdec-sortmm model=/gpfs/public/artifacts/models/Qwen/Qwen3-Omni-30B-A3B-Instruct serve=vllm asc=12 seg=/home/garam/nvdec-runs/segments-1080p media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2}} shape: --mm-processor-kwargs {"max_pixels":313600,"fps":2.0} --structured-outputs-config {"backend":"xgrammar","disable_any_whitespace":true} timers=1 extra: ) -> /home/garam/nvdec-runs/qwen-live1080-nvdec-sortmm
+request shape: SYSTEM_PROMPT=set PROMPT=default MAX_TOKENS=2048 RESPONSE_FORMAT=set VIDEO_URL_FPS=
+seg_server: 800 copies of /home/garam/nvdec-runs/segments-1080p on :8890
+ready after ~140s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== qwen1080-nvdec-sortmm/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=27.2s throughput=2.4 req/s
+  latency p50=21.67s p90=22.78s p95=25.58s max=27.17s min=19.02s
+  prompt_tokens avg=5911 completion_tokens avg=312.7
+  gpu samples (sm%/dec%): 9/20 22/27 8/0 83/0 90/0 22/0 29/0 30/0 26/0 22/0 34/0 37/0 43/0 43/0 53/0 57/0 56/0 58/0 55/0 58/0 
+=== qwen1080-nvdec-sortmm/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=13.3s throughput=4.8 req/s
+  latency p50=11.92s p90=12.97s p95=13.11s max=13.27s min=9.57s
+  prompt_tokens avg=5830 completion_tokens avg=261.5
+  gpu samples (sm%/dec%): 39/75 84/0 94/0 21/0 28/0 33/0 26/0 30/0 39/0 42/0 48/0 54/0 55/0 
+=== qwen1080-nvdec-sortmm/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=15.9s throughput=4.0 req/s
+  latency p50=13.52s p90=15.05s p95=15.45s max=15.87s min=10.30s
+  prompt_tokens avg=5911 completion_tokens avg=297.6
+  gpu samples (sm%/dec%): 11/0 85/0 95/0 21/0 23/0 35/0 25/0 23/0 25/0 39/0 41/0 46/0 49/0 52/0 56/0 57/0 
+=== qwen1080-nvdec-sortmm/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=16.0s throughput=4.0 req/s
+  latency p50=12.83s p90=13.91s p95=14.39s max=15.99s min=9.38s
+  prompt_tokens avg=5830 completion_tokens avg=289.6
+  gpu samples (sm%/dec%): 80/0 26/0 90/0 21/0 34/0 36/0 36/0 25/0 32/0 34/0 41/0 54/0 47/0 56/0 53/0 57/0 
+## sequential: per-request stage cost
+=== qwen1080-nvdec-sortmm/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=64.6s throughput=0.4 req/s
+  latency p50=2.70s p90=3.03s p95=3.34s max=4.78s min=1.55s
+  prompt_tokens avg=5911 completion_tokens avg=314.7
+  gpu samples (sm%/dec%): 51/0 55/0 53/0 53/0 41/0 55/0 56/0 50/0 57/0 52/0 53/0 55/0 18/5 56/0 53/0 55/0 53/0 53/0 55/0 55/0 54/0 56/0 53/0 53/0 3/5 53/0 53/0 3/6 53/0 57/0 15/0 54/0 55
+=== qwen1080-nvdec-sortmm/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=64.6s throughput=0.4 req/s
+  latency p50=2.64s p90=3.07s p95=3.17s max=3.22s min=2.26s
+  prompt_tokens avg=5830 completion_tokens avg=322.1
+  gpu samples (sm%/dec%): 50/0 52/0 4/8 53/0 57/0 50/0 52/0 53/0 55/0 19/0 54/0 56/0 54/0 54/0 31/0 53/0 4/8 52/0 54/0 19/0 53/0 57/0 33/0 53/0 57/0 53/0 57/0 53/0 53/0 55/0 53/0 52/0 56
+## burst rep 1
+=== qwen1080-nvdec-sortmm/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=14.4s throughput=4.4 req/s
+  latency p50=12.75s p90=13.86s p95=14.06s max=14.40s min=10.73s
+  prompt_tokens avg=5911 completion_tokens avg=278.2
+  gpu samples (sm%/dec%): 24/16 85/0 93/0 28/0 24/0 31/0 23/0 29/0 28/0 37/0 39/0 45/0 48/0 55/0 
+=== qwen1080-nvdec-sortmm/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=15.2s throughput=4.2 req/s
+  latency p50=11.64s p90=13.18s p95=13.86s max=15.15s min=9.37s
+  prompt_tokens avg=5830 completion_tokens avg=269.3
+  gpu samples (sm%/dec%): 44/98 86/0 89/0 20/0 27/0 42/0 36/0 30/0 35/0 45/0 55/0 48/0 53/0 55/0 55/0 
+## burst rep 2
+=== qwen1080-nvdec-sortmm/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=18.0s throughput=3.6 req/s
+  latency p50=12.81s p90=13.59s p95=16.64s max=17.99s min=10.38s
+  prompt_tokens avg=5911 completion_tokens avg=297.5
+  gpu samples (sm%/dec%): 37/64 85/0 95/0 20/0 21/0 27/0 32/0 35/0 34/0 42/0 46/0 41/0 44/0 59/0 57/0 55/0 58/0 56/0 
+=== qwen1080-nvdec-sortmm/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=12.6s throughput=5.1 req/s
+  latency p50=11.60s p90=12.10s p95=12.37s max=12.63s min=10.06s
+  prompt_tokens avg=5830 completion_tokens avg=255.8
+  gpu samples (sm%/dec%): 84/81 73/0 90/0 21/0 33/0 36/0 29/0 33/0 39/0 45/0 45/0 57/0 
+## done qwen1080-nvdec-sortmm -> /home/garam/nvdec-runs/qwen-live1080-nvdec-sortmm
+mps: 1 procs
+server starting (label=nemo1080-nvdec-asc12 model=nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 serve=vllm asc=12 seg=/home/garam/nvdec-runs/segments-1080p media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":2,"num_frames":128}} shape: --reasoning-parser nemotron_v3 timers=1 extra: ) -> /home/garam/nvdec-runs/live1080-nvdec-asc12
+request shape: SYSTEM_PROMPT= PROMPT=default MAX_TOKENS=64 RESPONSE_FORMAT= VIDEO_URL_FPS=
+seg_server: 800 copies of /home/garam/nvdec-runs/segments-1080p on :8890
+ready after ~110s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== nemo1080-nvdec-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.8s throughput=7.3 req/s
+  latency p50=8.35s p90=8.60s p95=8.72s max=8.81s min=8.24s
+  prompt_tokens avg=1783 completion_tokens avg=22.8
+  gpu samples (sm%/dec%): 2/0 5/11 20/20 6/0 68/0 36/0 39/0 37/0 42/0 
+=== nemo1080-nvdec-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.5s throughput=11.7 req/s
+  latency p50=5.15s p90=5.45s p95=5.45s max=5.45s min=4.71s
+  prompt_tokens avg=1705 completion_tokens avg=39.8
+  gpu samples (sm%/dec%): 40/98 1/0 59/0 52/0 57/0 
+=== nemo1080-nvdec-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.5s throughput=9.9 req/s
+  latency p50=6.08s p90=6.18s p95=6.25s max=6.42s min=5.98s
+  prompt_tokens avg=1783 completion_tokens avg=20.9
+  gpu samples (sm%/dec%): 37/62 31/0 14/0 35/0 65/0 28/0 
+=== nemo1080-nvdec-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.5s throughput=11.6 req/s
+  latency p50=5.24s p90=5.47s p95=5.47s max=5.48s min=4.79s
+  prompt_tokens avg=1705 completion_tokens avg=43.1
+  gpu samples (sm%/dec%): 43/87 44/0 38/0 39/0 55/0 
+## sequential: per-request stage cost
+=== nemo1080-nvdec-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=21.3s throughput=1.1 req/s
+  latency p50=0.88s p90=0.92s p95=0.97s max=1.01s min=0.83s
+  prompt_tokens avg=1783 completion_tokens avg=20.2
+  gpu samples (sm%/dec%): 19/0 34/0 3/10 2/1 12/0 25/0 13/0 34/0 29/0 3/4 23/0 14/0 37/0 4/10 
+=== nemo1080-nvdec-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=21.4s throughput=1.1 req/s
+  latency p50=0.88s p90=1.05s p95=1.06s max=1.08s min=0.72s
+  prompt_tokens avg=1705 completion_tokens avg=36.2
+  gpu samples (sm%/dec%): 27/0 2/3 21/0 26/0 12/0 34/0 19/0 35/0 36/0 33/0 28/0 9/7 2/1 4/8 11/0 
+## burst rep 1
+=== nemo1080-nvdec-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.0s throughput=10.7 req/s
+  latency p50=5.58s p90=5.76s p95=5.83s max=5.96s min=5.49s
+  prompt_tokens avg=1783 completion_tokens avg=21.5
+  gpu samples (sm%/dec%): 40/92 36/0 38/0 22/0 47/0 46/0 
+=== nemo1080-nvdec-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.4s throughput=11.8 req/s
+  latency p50=5.31s p90=5.41s p95=5.41s max=5.42s min=4.68s
+  prompt_tokens avg=1705 completion_tokens avg=44.3
+  gpu samples (sm%/dec%): 44/98 62/0 45/0 38/0 57/0 
+## burst rep 2
+=== nemo1080-nvdec-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.0s throughput=10.7 req/s
+  latency p50=5.52s p90=5.83s p95=5.90s max=5.96s min=5.43s
+  prompt_tokens avg=1783 completion_tokens avg=24.5
+  gpu samples (sm%/dec%): 35/20 35/0 39/0 28/0 45/0 44/0 
+=== nemo1080-nvdec-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.3s throughput=12.0 req/s
+  latency p50=4.97s p90=5.29s p95=5.31s max=5.32s min=4.62s
+  prompt_tokens avg=1705 completion_tokens avg=38.5
+  gpu samples (sm%/dec%): 46/43 36/0 37/0 39/0 57/0 
+## burst rep 3
+=== nemo1080-nvdec-asc12/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=5.6s throughput=11.3 req/s
+  latency p50=5.38s p90=5.44s p95=5.53s max=5.61s min=5.33s
+  prompt_tokens avg=1783 completion_tokens avg=18.3
+  gpu samples (sm%/dec%): 38/44 37/0 13/0 55/0 39/0 
+=== nemo1080-nvdec-asc12/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=5.4s throughput=11.8 req/s
+  latency p50=5.05s p90=5.38s p95=5.39s max=5.40s min=4.71s
+  prompt_tokens avg=1705 completion_tokens avg=41.0
+  gpu samples (sm%/dec%): 49/79 34/0 37/0 39/0 56/0 
+## done nemo1080-nvdec-asc12 -> /home/garam/nvdec-runs/live1080-nvdec-asc12
+server starting (label=nemo1080-cpu-asc12 model=nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 serve=vllm asc=12 seg=/home/garam/nvdec-runs/segments-1080p media-io={"video":{"backend":"opencv","fps":2,"num_frames":128}} shape: --reasoning-parser nemotron_v3 timers=1 extra: ) -> /home/garam/nvdec-runs/live1080-cpu-asc12
+request shape: SYSTEM_PROMPT= PROMPT=default MAX_TOKENS=64 RESPONSE_FORMAT= VIDEO_URL_FPS=
+seg_server: 800 copies of /home/garam/nvdec-runs/segments-1080p on :8890
+ready after ~100s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== nemo1080-cpu-asc12/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=7.9s throughput=8.1 req/s
+  latency p50=7.50s p90=7.56s p95=7.80s max=7.88s min=7.41s
+  prompt_tokens avg=1773 completion_tokens avg=20.7
+  gpu samples (sm%/dec%): 1/0 27/0 63/0 39/0 16/0 42/0 
+=== nemo1080-cpu-asc12/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=6.3s throughput=10.2 req/s
+  latency p50=5.98s p90=6.22s p95=6.23s max=6.25s min=5.53s
+  prompt_tokens avg=1695 completion_tokens avg=40.5
+  gpu samples (sm%/dec%): 34/0 35/0 38/0 36/0 54/0 
+=== nemo1080-cpu-asc12/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.7s throughput=9.6 req/s
+  latency p50=6.30s p90=6.36s p95=6.42s max=6.64s min=6.21s
+  prompt_tokens avg=1773 completion_tokens avg=20.3
+  gpu samples (sm%/dec%): 36/0 68/0 38/0 53/0 
+=== nemo1080-cpu-asc12/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=6.3s throughput=10.2 req/s
+  latency p50=5.92s p90=6.22s p95=6.23s max=6.24s min=5.56s
+  prompt_tokens avg=1695 completion_tokens avg=40.4
+  gpu samples (sm%/dec%): 36/0 47/0 39/0 38/0 60/0 
+## sequential: per-request stage cost
+=== nemo1080-cpu-asc12/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=22.1s throughput=1.1 req/s
+  latency p50=0.92s p90=0.96s p95=0.97s max=1.09s min=0.83s
+  prompt_tokens avg=1772 completion_tokens avg=19.5
+  gpu samples (sm%/dec%): 19/0 21/0 28/0 16/0 12/0 24/0 36/0 3/0 15/0 18/0 22/0 37/0 27/0 15/0 
+=== nemo1080-cpu-asc12/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=21.6s throughput=1.1 req/s
+  latency p50=0.86s p90=1.12s p95=1.12s max=1.15s min=0.77s
+  prompt_tokens avg=1695 completion_tokens avg=31.8
+  gpu samples (sm%/dec%): 29/0 35/0 29/0 6/0 23/0 27/0 4/0 27/0 35/0 10/0 
+## burst rep 1
+=== nemo1080-cpu-asc12/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=7.0s throughput=9.1 req/s
+  latency p50=6.52s p90=6.76s p95=6.94s max=6.97s min=6.45s
+  prompt_tokens avg=1773 completion_tokens avg=23.3
+  gpu samples (sm%/dec%): 24/0 59/0 33/0 66/0 53/0 
+=== nemo1080-cpu-asc12/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=6.3s throughput=10.1 req/s
+  latency p50=6.04s p90=6.29s p95=6.30s max=6.30s min=5.61s
+  prompt_tokens avg=1695 completion_tokens avg=42.1
+  gpu samples (sm%/dec%): 17/0 63/0 52/0 43/0 58/0 
+## burst rep 2
+=== nemo1080-cpu-asc12/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.8s throughput=9.4 req/s
+  latency p50=6.47s p90=6.56s p95=6.66s max=6.79s min=6.37s
+  prompt_tokens avg=1773 completion_tokens avg=19.8
+  gpu samples (sm%/dec%): 35/0 38/0 66/0 46/0 
+=== nemo1080-cpu-asc12/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=6.2s throughput=10.3 req/s
+  latency p50=5.83s p90=6.19s p95=6.20s max=6.22s min=5.52s
+  prompt_tokens avg=1695 completion_tokens avg=35.7
+  gpu samples (sm%/dec%): 26/0 36/0 37/0 36/0 55/0 
+## burst rep 3
+=== nemo1080-cpu-asc12/burst3-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=6.8s throughput=9.5 req/s
+  latency p50=6.40s p90=6.47s p95=6.57s max=6.74s min=6.33s
+  prompt_tokens avg=1773 completion_tokens avg=18.8
+  gpu samples (sm%/dec%): 38/0 61/0 38/0 38/0 
+=== nemo1080-cpu-asc12/burst3-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=6.3s throughput=10.2 req/s
+  latency p50=5.83s p90=6.23s p95=6.23s max=6.24s min=5.54s
+  prompt_tokens avg=1695 completion_tokens avg=38.1
+  gpu samples (sm%/dec%): 35/0 36/0 38/0 38/0 55/0 
+## done nemo1080-cpu-asc12 -> /home/garam/nvdec-runs/live1080-cpu-asc12
+mps: 1 procs
+server starting (label=nemo1080-nvdec-batchvit model=nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 serve=vllm asc=12 seg=/home/garam/nvdec-runs/segments-1080p media-io={"video":{"backend":"pynvvideocodec","hw_decoders":2,"fps":2,"num_frames":128}} shape: --reasoning-parser nemotron_v3 timers=1 extra: ) -> /home/garam/nvdec-runs/live1080-nvdec-batchvit
+request shape: SYSTEM_PROMPT= PROMPT=default MAX_TOKENS=64 RESPONSE_FORMAT= VIDEO_URL_FPS=
+seg_server: 800 copies of /home/garam/nvdec-runs/segments-1080p on :8890
+ready after ~100s
+## warmup (bursts so that every API server compiles its video/audio paths)
+=== nemo1080-nvdec-batchvit/warm1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=8.3s throughput=7.7 req/s
+  latency p50=7.91s p90=8.02s p95=8.18s max=8.33s min=7.80s
+  prompt_tokens avg=1783 completion_tokens avg=21.0
+  gpu samples (sm%/dec%): 2/6 35/84 2/0 32/0 35/0 43/0 58/0 56/0 
+=== nemo1080-nvdec-batchvit/warm1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.3s throughput=15.0 req/s
+  latency p50=3.92s p90=4.24s p95=4.24s max=4.25s min=3.49s
+  prompt_tokens avg=1705 completion_tokens avg=40.7
+  gpu samples (sm%/dec%): 48/96 61/0 65/0 58/0 
+=== nemo1080-nvdec-batchvit/warm2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.5s throughput=14.3 req/s
+  latency p50=4.13s p90=4.21s p95=4.37s max=4.46s min=4.02s
+  prompt_tokens avg=1783 completion_tokens avg=20.8
+  gpu samples (sm%/dec%): 39/46 83/0 67/0 45/0 
+=== nemo1080-nvdec-batchvit/warm2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.3s throughput=14.8 req/s
+  latency p50=4.16s p90=4.30s p95=4.31s max=4.31s min=3.59s
+  prompt_tokens avg=1705 completion_tokens avg=46.0
+  gpu samples (sm%/dec%): 57/40 61/0 51/0 58/0 
+## sequential: per-request stage cost
+=== nemo1080-nvdec-batchvit/seq-av mode=http N=24 concurrency=1 audio=True ===
+  ok=24 err=0 wall=21.2s throughput=1.1 req/s
+  latency p50=0.87s p90=0.93s p95=0.94s max=1.17s min=0.84s
+  prompt_tokens avg=1783 completion_tokens avg=21.0
+  gpu samples (sm%/dec%): 36/0 5/11 16/0 12/0 36/0 5/11 2/0 22/0 14/0 12/0 15/0 38/0 5/10 8/0 
+=== nemo1080-nvdec-batchvit/seq-v mode=http N=24 concurrency=1 audio=False ===
+  ok=24 err=0 wall=21.5s throughput=1.1 req/s
+  latency p50=0.92s p90=1.05s p95=1.05s max=1.07s min=0.72s
+  prompt_tokens avg=1705 completion_tokens avg=38.1
+  gpu samples (sm%/dec%): 21/3 5/11 32/0 27/0 26/0 12/0 37/0 5/12 12/0 26/0 9/0 23/0 27/0 27/0 34/0 36/0 2/2 
+## burst rep 1
+=== nemo1080-nvdec-batchvit/burst1-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.8s throughput=13.4 req/s
+  latency p50=4.33s p90=4.53s p95=4.58s max=4.73s min=4.22s
+  prompt_tokens avg=1783 completion_tokens avg=22.5
+  gpu samples (sm%/dec%): 43/96 89/0 54/0 45/0 39/0 
+=== nemo1080-nvdec-batchvit/burst1-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.3s throughput=14.8 req/s
+  latency p50=4.05s p90=4.28s p95=4.29s max=4.30s min=3.54s
+  prompt_tokens avg=1705 completion_tokens avg=45.4
+  gpu samples (sm%/dec%): 51/97 47/0 62/0 57/0 
+## burst rep 2
+=== nemo1080-nvdec-batchvit/burst2-av mode=http N=64 concurrency=64 audio=True ===
+  ok=64 err=0 wall=4.7s throughput=13.7 req/s
+  latency p50=4.20s p90=4.47s p95=4.59s max=4.65s min=4.13s
+  prompt_tokens avg=1783 completion_tokens avg=22.9
+  gpu samples (sm%/dec%): 44/99 65/0 41/0 43/0 22/0 
+=== nemo1080-nvdec-batchvit/burst2-v mode=http N=64 concurrency=64 audio=False ===
+  ok=64 err=0 wall=4.3s throughput=14.8 req/s
+  latency p50=3.94s p90=4.30s p95=4.32s max=4.33s min=3.61s
+  prompt_tokens avg=1705 completion_tokens avg=37.4
+  gpu samples (sm%/dec%): 39/98 71/0 83/0 55/0 
+## done nemo1080-nvdec-batchvit -> /home/garam/nvdec-runs/live1080-nvdec-batchvit
+CHAIN_1080_DONE
+
+--- segments
+800
+#!/usr/bin/env bash
+# 6 s HLS MPEG-TS segments at 1080p from genuine 1080p sports broadcast (worldcup match), encoder characteristics
+# copied from the production 360p segment seg6.ts: H.264 High, 29.97 fps, 2 B-frames, 1 ref, one IDR per segment
+# (GOP = whole segment), AAC-LC 16 kHz mono ~48 kbps. Only resolution and bitrate change (1920x1080, 4.5 Mbps ABR).
+set -euo pipefail
+FF=~/miniconda3/envs/ffmpeg/bin/ffmpeg
+SRC=/gpfs/public/datasets/2026-worldcup-full-match/ARG_vs_ALG_groupJ_match1.mp4
+OUT=~/nvdec-runs/segments-1080p
+cd $OUT && rm -f seg_*.ts playlist.m3u8
+$FF -hide_banner -loglevel warning -stats -ss 00:10:00 -t 4806 -i $SRC \
+  -vf "fps=30000/1001,format=yuv420p" -c:v libx264 -preset faster -profile:v high -level 4.0 \
+  -b:v 4500k -maxrate 5000k -bufsize 9000k -bf 2 -refs 1 \
+  -g 180 -keyint_min 180 -sc_threshold 0 -force_key_frames "expr:gte(t,n_forced*6.006)" \
+  -c:a aac -ar 16000 -ac 1 -b:a 48k \
+  -f hls -hls_time 6 -hls_segment_type mpegts -hls_list_size 0 -hls_flags independent_segments \
+  -hls_segment_filename "seg_%04d.ts" playlist.m3u8
+echo SEGMENTS_DONE
+no leftover processes
