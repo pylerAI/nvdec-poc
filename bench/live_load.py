@@ -7,6 +7,8 @@ N (requests), CONCURRENCY (N = one burst like load_test.py, 1 = sequential), USE
 MEDIA_IO (JSON for media_io_kwargs), MAX_TOKENS, KEY (unique prefix for this run), LABEL, OUT (per-request jsonl).
 Production request shape (live-ingest): SYSTEM_PROMPT (adds a system message), RESPONSE_FORMAT (JSON, or @path to a
 JSON file; sent as response_format), VIDEO_URL_EXTRA (JSON merged into the video_url object, e.g. {"fps": 2.0}), PROMPT="" (no text part, video only).
+VOD (worker-captioning): CLIP_EXT=mp4 and AUDIO_URL_BASE=http://127.0.0.1:8890/a send the clip's companion WAV as a
+separate audio_url part instead of use_audio_in_video.
 Prints the same summary lines as load_test.py.
 """
 import base64, json, os, statistics, threading, time, urllib.error, urllib.request
@@ -29,13 +31,16 @@ if RESPONSE_FORMAT and RESPONSE_FORMAT.startswith("@"):
     RESPONSE_FORMAT = open(RESPONSE_FORMAT[1:]).read()
 RESPONSE_FORMAT = json.loads(RESPONSE_FORMAT) if RESPONSE_FORMAT else None
 VIDEO_URL_EXTRA = json.loads(os.environ.get("VIDEO_URL_EXTRA") or "{}")
+CLIP_EXT = os.environ.get("CLIP_EXT", "ts")  # extension of the URL served by seg_server (ts or mp4)
+AUDIO_URL_BASE = os.environ.get("AUDIO_URL_BASE")  # e.g. http://127.0.0.1:8890/a -> send a separate audio_url part
+                                                   # (production VOD) instead of use_audio_in_video when USE_AUDIO=1
 
 if MODE == "data":
     BASE = open(os.environ["SEG"], "rb").read()
     null = lambda k: bytes([0x47, 0x1F, 0xFF, 0x10]) + k.encode()[:184].ljust(184, b"\xff")
     url_of = lambda k: "data:video/mp2t;base64," + base64.b64encode(BASE + null(k)).decode()
 else:
-    url_of = lambda k: f"{SEG_URL}/{k}.ts"
+    url_of = lambda k: f"{SEG_URL}/{k}.{CLIP_EXT}"
 
 
 def body(i):
@@ -43,13 +48,14 @@ def body(i):
         "model": "omni-v1",
         "messages": ([{"role": "system", "content": SYSTEM_PROMPT}] if SYSTEM_PROMPT else []) + [{"role": "user", "content": [
             {"type": "video_url", "video_url": {"url": url_of(f"{KEY}-{i}"), **VIDEO_URL_EXTRA}},
-        ] + ([{"type": "text", "text": PROMPT}] if PROMPT else [])}],
+        ] + ([{"type": "audio_url", "audio_url": {"url": f"{AUDIO_URL_BASE}/{KEY}-{i}.wav"}}] if USE_AUDIO and AUDIO_URL_BASE else [])
+          + ([{"type": "text", "text": PROMPT}] if PROMPT else [])}],
         "max_tokens": MAX_TOKENS, "temperature": 0.1,
         "chat_template_kwargs": {"enable_thinking": False},
     }
     if RESPONSE_FORMAT:
         b["response_format"] = RESPONSE_FORMAT
-    if USE_AUDIO:
+    if USE_AUDIO and not AUDIO_URL_BASE:
         b["mm_processor_kwargs"] = {"use_audio_in_video": True}
     if os.environ.get("MEDIA_IO"):
         b["media_io_kwargs"] = json.loads(os.environ["MEDIA_IO"])

@@ -46,9 +46,9 @@ def q(xs, p):
     return xs[min(len(xs) - 1, int(p * len(xs)))] if xs else float("nan")
 
 
-GROUPS = [("seq-av", lambda n: n == "seq-av"), ("seq-v", lambda n: n == "seq-v"),
-          ("burst-av", lambda n: n.startswith("burst") and n.endswith("-av")),
-          ("burst-v", lambda n: n.startswith("burst") and n.endswith("-v"))]
+import re
+GROUP_OF = lambda n: re.sub(r"^burst\d+", "burst", n)  # burst1-av -> burst-av, burst2-c8-v -> burst-c8-v
+GROUPS = [(g, (lambda n, g=g: GROUP_OF(n) == g)) for g in ("seq-av", "seq-v", "burst-c8-av", "burst-c8-v", "burst-av", "burst-v")]
 
 
 def summarize(d):

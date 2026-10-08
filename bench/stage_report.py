@@ -96,7 +96,7 @@ def groups(runs, per_run):
     for run in runs:
         if run["name"].startswith("warm"):
             continue
-        out.setdefault(run["name"] if per_run else re.sub(r"\d+", "", run["name"]), []).append(run)
+        out.setdefault(run["name"] if per_run else re.sub(r"^burst\d+", "burst", run["name"]), []).append(run)
     return out
 
 

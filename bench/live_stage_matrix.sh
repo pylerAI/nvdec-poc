@@ -13,7 +13,7 @@
 #      timers. Output: $OUT (default ~/nvdec-runs/<label>-<time>/)
 set -u
 LABEL=$1; MEDIA_IO=$2; shift 2
-ASC=${ASC:-12}; N1=${N1:-24}; REPS=${REPS:-3}
+ASC=${ASC:-12}; N1=${N1:-24}; REPS=${REPS:-3}; BURSTS=${BURSTS:-64}   # BURSTS="8 64": burst concurrency levels
 MODEL=${MODEL:-nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16}
 # Server shape; defaults reproduce bench/e2e_matrix.sh (Nemotron). For the production Qwen3-Omni shape set
 # REASONING_PARSER= (empty), MAX_MODEL_LEN/MAX_BATCHED 49152, GPU_UTIL 0.9, MM_KWARGS, STRUCTURED (see values.yaml).
@@ -70,9 +70,12 @@ echo "## sequential: per-request stage cost"
 run seq-av "$N1" 1 1
 run seq-v "$N1" 1 0
 for rep in $(seq 1 "$REPS"); do
-  echo "## burst rep $rep"
-  run burst${rep}-av 64 64 1
-  run burst${rep}-v 64 64 0
+  for c in $BURSTS; do
+    echo "## burst rep $rep, concurrency $c"
+    if [ "$c" = 64 ]; then sfx=""; else sfx="-c$c"; fi
+    run burst${rep}${sfx}-av "$c" "$c" 1
+    run burst${rep}${sfx}-v "$c" "$c" 0
+  done
 done
 cp "$BENCH"/stagetime/sitecustomize.py "$OUT/" 2>/dev/null
 kill $SEGSRV 2>/dev/null
